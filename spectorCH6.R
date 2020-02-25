@@ -95,7 +95,7 @@ life2=subset(LifeCycleSavings,select=c(-pop15,-pop75))
 
 life2=subset(LifeCycleSavings,select=c(2,3))
 
-#beizhu  
+#beizhu  1111
 
 
 
