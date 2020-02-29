@@ -38,7 +38,7 @@ library(chron)
 dtimes = c("2002-06-09 12:45:40","2003-01-29 09:30:40",
            "2002-09-04 16:45:40","2002-11-13 20:00:40",
            "2002-07-07 17:30:40")
-dtparts = t(as.data.frame(strsplit(dtimes,'')))
+dtparts = t(as.data.frame(strsplit(dtimes,' ')))# instead of '', get error
 row.names(dtparts) = NULL
 thetimes = chron(dates=dtparts[,1],times=dtparts[,2],
                  format=c('y-m-d','h:m:s'))
