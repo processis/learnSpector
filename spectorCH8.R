@@ -60,3 +60,11 @@ max.e=by(iris,iris$Species,function(df)eigen(cor(df[-5]))$val[1])
 max.e
 #by return a scalar, convert to data frame
 as.data.frame(as.table(max.e))
+#continue 2020.2.28 PM
+data("CO2")
+data("state")
+data("LifeCycleSavings")
+#8.1 table on state.x77 and state.region
+hiinc = state.x77[,'Income'] > median(state.x77[,'Income'])
+stateinc = table(state.region,hiinc)
+stateinc
