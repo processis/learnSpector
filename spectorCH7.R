@@ -59,7 +59,7 @@ expr
 #7.6
 sentence=
   'R is a free software environment for statistical computing'
-parts=strsplit(sentence,'')
+parts=strsplit(sentence,' ')
 parts
 
 length(parts)

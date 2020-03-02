@@ -27,6 +27,10 @@ urlink= "/favicon.ico HTTP/1.1"
 parts = strsplit(urlink,'/')
 length(parts[[1]])
 ######
-tmpSite = strsplit(rawAccess$V6,'/')
-rawAccess$site = tmpSite(2)
-tempSite = tmpSite[2,]
+# tmpSite = strsplit(rawAccess$V6,'/')
+# rawAccess$site = tmpSite(2)
+# tempSite = tmpSite[2,]
+rawAccess$V6 = sub('^/','',rawAccess$V6)
+rawAccess$custSiteName = sub('^http://[a-zA-Z0-9.]+/([^ ]+)','\\1',rawAccess$V6)
+rawAccess$custSiteName2 = sub('/.+','',rawAccess$custSiteName)
+# rawAccess$custSiteName3 = sub(paste('^[a-z]+','\\.','[a-z]+'),'\\1',rawAccess$custSiteName2)
