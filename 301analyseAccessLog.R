@@ -34,3 +34,33 @@ rawAccess$V6 = sub('^/','',rawAccess$V6)
 rawAccess$custSiteName = sub('^http://[a-zA-Z0-9.]+/([^ ]+)','\\1',rawAccess$V6)
 rawAccess$custSiteName2 = sub('/.+','',rawAccess$custSiteName)
 # rawAccess$custSiteName3 = sub(paste('^[a-z]+','\\.','[a-z]+'),'\\1',rawAccess$custSiteName2)
+rawAccess$custSiteName3 = factor (rawAccess$custSiteName2,levels = c("mediawiki.ma","hdsx.cmmi","lenovo.cmmi",ordered=TRUE))
+rawAccess$V7 = as.factor(rawAccess$V7)
+#get some basic table counts
+table(rawAccess$V7)
+table(rawAccess$custSiteName3)
+table(rawAccess$action)
+summary(rawAccess$V8)
+#look at size(V8) broken by GET(action) , custSiteName3 
+library(ggplot2)
+rawAccess$action = factor (rawAccess$action,levels = c("GET","POST"))
+rawAccess$cod200 = sub("200","1",rawAccess$V7)
+rawAccess$cod200 = sub("3[0-9]+","0",rawAccess$cod200)
+rawAccess$cod200 = sub("2[0-9]+","0",rawAccess$cod200)
+rawAccess$cod200 = sub("4[0-9]+","0",rawAccess$cod200)
+rawAccess$cod200 = as.factor(rawAccess$cod200)
+
+# good plot
+ggplot(rawAccess, aes(x = custSiteName3, fill = factor(cod200))) +
+  geom_bar() +
+  xlab("Customer Sites") +
+  ylab("Total Count") +
+  labs(fill = "cod200") 
+#
+# Visualize the 3-way relationship , compare to analysis take very long to run
+ggplot(rawAccess, aes(x = V8, fill = cod200)) +
+  facet_wrap(~action + custSiteName3) + 
+  ggtitle("POST vs customers") +
+  geom_histogram(binwidth = 100) +
+  xlab("V8 count") +
+  ylab("Total Count") 
