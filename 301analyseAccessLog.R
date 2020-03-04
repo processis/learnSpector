@@ -57,10 +57,24 @@ ggplot(rawAccess, aes(x = custSiteName3, fill = factor(cod200))) +
   ylab("Total Count") +
   labs(fill = "cod200") 
 #
+ggplot(rawAccess, aes(x = custSiteName3, fill = factor(action)))+
+  geom_bar() +
+  xlab("Customer Sites") +
+  ylab("Total Count") +
+  labs(fill = "GET / POST") 
+#
 # Visualize the 3-way relationship , compare to analysis take very long to run
 ggplot(rawAccess, aes(x = V8, fill = cod200)) +
   facet_wrap(~action + custSiteName3) + 
   ggtitle("POST vs customers") +
   geom_histogram(binwidth = 100) +
+  xlab("V8 count") +
+  ylab("Total Count") 
+
+# Visualize the 3-way relationship , compare to analysis take very long to run
+ggplot(rawAccess, aes(x = V8, fill = action)) +
+  facet_wrap(~action + custSiteName3) + 
+  ggtitle("POST vs customers") +
+  geom_histogram(binwidth = 1000) +
   xlab("V8 count") +
   ylab("Total Count") 
