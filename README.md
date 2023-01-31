@@ -7,3 +7,6 @@ Data manipulation
 >##2020.2.29
 >- try read Date / time on Mwiki Access Log
 >- 229dateTimeExp  code and odt
+
+##2023.1.31
+project learnSpector in Rstudio : can pull and push ok 
