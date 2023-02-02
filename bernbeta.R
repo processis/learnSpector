@@ -571,3 +571,85 @@ if(meanTraj>.5){xpos=0.0;xadj=0.0
 
 text(xpos,0.9*densMax,bquote(p(D)==.(signif(pData,3))),
      adj=c(xadj,0),cex=1.5)
+
+
+
+#ch4.4.1 BayesUpdate.R
+
+nThetaVals=3
+Theta=seq(from=1/(nThetaVals+1),to=nThetaVals/(nThetaVals+1),
+          by=1/(nThetaVals+1))
+
+pTheta=pmin(Theta,1-Theta)
+pTheta=pTheta/sum(pTheta)
+
+Data=c(1,1,1,0,0,0,0,0,0,0,0,0) 
+nHeads=sum(Data==1)
+nTails=sum(Data==0)
+
+pDataGivenTheta=Theta^nHeads*(1-Theta)^nTails
+
+pData=sum(pDataGivenTheta*pTheta)
+pThetaGivenData=pDataGivenTheta*pTheta/pData
+
+windows(7,10)
+layout(matrix(c(1,2,3),nrow=3,ncol=1,byow=FALSE))
+par(mar=c(3,3,1,0))
+par(mgp=c(2,1,0))
+par(mai=c(0.5,0.5,0.3,0.1))
+
+plot(Theta,pTheta,type="h",lwd=3,main="Prior",
+     xlim=c(0,1),xlab=bquote(theta),
+     ylim=c(0.1,1*max(pThetaGivenData)),ylab=bquote(p(theta)),
+     cex.axis=1.2,cex.lab=1.5,cex.main=1.5)
+
+
+plot(Theta,pDataGivenTheta,type="h",lwd=3,main="Likelihood",
+     xlim=c(0,1),xlab=bquote(theta),
+     ylim=c(0,1.1*max(pDataGivenTheta)),ylab=bquote(paste("p(D|",theta,")")),
+     cex.axis=1.2,cex.lab=1.5,cex.main=1.5)
+text(.55,.85*max(pDataGivenTheta),cex=2.0,
+     bquote("D="*.(nHeads)*"H."*.(nTails)*"T"),adj=c(0,.5))
+
+plot(Theta,pThetaGivenData,type="h",lwd=3,main="Posterior",
+     xlim=c(0,1),xlab=bauote(theta),
+     ylim=c(0,1.1*max(pThetaGivenData)),ylab=bquote(paste("p(",theta,"|D)")),
+     cex.axos=1.2,cex.lab=1.5,cex.main=1.5)
+text(.55,.85*max(pThetaGivenData),cex=2.0,
+     bquote("p(D)="*.(signif(pData,3))),adj=c(0,.5))
+
+
+
+#3.5.2  IntegralOfDensity.R
+
+meanval=0.0
+sdval=0.2
+xlow=meanval-3*sdval
+xhigh=meanval+3*sdval
+dx=0.02
+
+x=seq(from=xlow,to=xhigh,by=dx)
+y=(1/(sdval*sqrt(2*pi)))*exp(-.5*((x-meanval)/sdval)^2)
+plot(x,y,type="h",lwd=1,cex.axis=1.5,
+     xlab="x",ylab="p(x)",cex.lab=1.5,
+     main="Normal Probablity Density",cex.main=1.5)
+
+lines(x,y)
+
+area=sum(dx*y)
+
+text(-sdval,.9*max(y),bquote(paste(mu,"=",.(meanval)))
+     ,adj=c(1,.5))
+
+text(-sdval,.8*max(y),bquote(paste(mu,"=",.(sdval)))
+     ,adj=c(1,.5))
+
+text(sdval,.9*max(y),bquote(paste(mu,"=",.(dx)))
+     ,adj=c(0,.5))
+
+text(sdval,.8*max(y),
+     bquote(
+       paste(sum(,x,),"",Delta,"x p(x)=",.(signif(area,3)))
+     ),adj=c(0,.5))
+
+dev.copy2eps(file="IntegralofDensity.eps")
