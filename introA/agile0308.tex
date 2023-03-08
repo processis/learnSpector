@@ -1,0 +1,186 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass{book}        % from not too short p76 pagestyle
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%ensure chapter section headngs in lower case
+%
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.png,.jpg}
+\usepackage{xeCJK}
+\setCJKmainfont{SimSun}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{longtable,booktabs}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\date{}
+
+%\includeonly{INNOVgeren}
+\begin{document}               % plus the \end{document} command at the end.
+
+%\begin{titlepage}\thispagestyle{empty} \vspace*{3em}{\centering\Huge A++ 敏捷开发小手册 \par}\clearpage
+%S\newpage \thispagestyle{empty} \mbox{} \cleardoublepage
+\thispagestyle{empty} \vspace*{7em}{\centering\Huge A++ 敏捷开发小手册 \par}{\centering -- 从个人提升到 以数据说话 \par}\cleardoublepage
+
+%\thispagestyle{empty} \vspace*{\fill} \parbox{.8\textwidth}{\raggedright \scriptsize
+%\textit{impossible} publisher 2022
+
+%printed blindfolded
+
+%design: \LaTeX
+%}
+%\end{titlepage}
+%\clearpage \thispagestyle{empty}\cleardoublepage
+%\newpage % Make sure the following content is on a new page
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Prints the table of contents
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION SECTION
+%----------------------------------------------------------------------------------------
+
+%\includeonly(filename,filrname,.......)
+
+%\input(filename)
+
+%\includeonly(INNOVgeren)
+
+\include{xuzhang}%done-1
+
+%\input(xuzhang)
+
+\include{ganxie}%done-1
+
+%\input(ganxie)
+
+\include{qianyan}%done-1
+
+%\input(qianyan)
+
+
+
+%----------------------------------------------------------------------------------------
+%	BOOK PART
+%----------------------------------------------------------------------------------------
+
+
+\include{RHGSMJKFZL}%done-1
+
+
+\part{个人提升}自我改善效率基本功\\
+\include{INNOVgeren}  %done-1
+\include{PORDkefutuoyan}  %done-1
+
+
+\part{自我管理开发过程}软件开发工程师自我改进过程\\
+\include{PERT3diangusuan} %done-1
+\include{PSPlianghgl}%done-1
+\include{ESTgsrjgm}%done-1
+\include{EST2gjgm}%done-1
+
+
+
+\part{开始过程改进之旅}团队必须先获得管理层的关注与支持\\
+\include{AP1lygc}%done-1
+\include{CMMIlypg}%done-1
+
+\part{从做好迭代回顾开始 }做好迭代回顾让团队向量化管理迈进一大步\\
+\include{AR1whgzzb}%done-1
+\include{AR2gyfx}%done-1
+\include{RHZH}%done-1ar3
+\include{AR4hg}%done-1
+
+\part{代码质量改进的基础}这部分参照Jeffery先生总结极限编程(XP)的三层图（在第一章里）,利用实例，先从内层的测试驱动开发(TDD)，重构(Refactoring),与结对编程(Pair Programming)等核心最佳实践开始，然后到中层的持续集成(Continuous Integration)，最后是外层的团队各角色协作/互补(Whole Team)和如何做好需求分析等。 \\
+\include{TDDcsqdkf}%done-1
+\include{TS1refact}%done-1
+\include{CIcxjc}%done-1
+\include{PR1jdpc}%done-1
+\include{RDM1rjxq}%done-1
+\include{ICincludec}%done-1
+\include{TSteam}%done-1
+
+
+
+\part{度量与分析}当团队开始养成每天收集数据的习惯，在迭代回顾时分析数据，公司便可以开始准备度量与分析。（注）
+要做好度量与分析，跟过程改进一样，要针对目标，制定度量计划。
+本部分开头会以问卷调查为例，
+介绍度量计划的主要元素，
+
+然后会介绍统计分析，控制图，假设检验等数据分析的基本功。
+
+最后利用某银行软件维护数据分析案例，
+简单介绍数据收集后，做分析的主要步骤。\\
+
+
+注：请不要误以为度量与分析必须由管理层驱动。
+若要团队能从定性升到定量管理，并能持续，而且有效果，必须从团队开始，而不是靠管理者总体策划
+\\
+
+\include{M1zwjdc}%done-1
+\include{MAjxh}%done-1
+\include{MA4jsjy}%done-1
+\include{M4Bycmx}%done-1
+\include{M3CC}%done-1
+
+
+\part{总结} 管理者应如何支持团队做好敏捷开发，为公司增值\\
+
+\include{MGRcjhdyj}%done-1
+\include{EOIdbh}%done-1
+
+
+
+
+\end{document}
