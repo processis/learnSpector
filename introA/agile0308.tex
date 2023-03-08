@@ -64,22 +64,28 @@
 \date{}
 
 \includeonly{INNOVgeren}
+
 \begin{document}               % plus the \end{document} command at the end.
 
-%\begin{titlepage}\thispagestyle{empty} \vspace*{3em}{\centering\Huge A++ 敏捷开发小手册 \par}\clearpage
-%S\newpage \thispagestyle{empty} \mbox{} \cleardoublepage
+\begin{titlepage}\thispagestyle{empty} \vspace*{3em}{\centering\Huge A++ 敏捷开发小手册 \par}\clearpage
+\newpage \thispagestyle{empty} \mbox{} \cleardoublepage
+
+%\begin{titlepage}\thispagestyle{empty} \vspace*{3em}
+%\includegraphics[width=13cm]{aBookCover2latexScreenshot2023-03-08130046.jpg}
+%\clearpage\newpage \thispagestyle{empty} \mbox{} \cleardoublepage
+
 \thispagestyle{empty} \vspace*{7em}{\centering\Huge A++ 敏捷开发小手册 \par}{\centering -- 从个人提升到 以数据说话 \par}\cleardoublepage
 
-%\thispagestyle{empty} \vspace*{\fill} \parbox{.8\textwidth}{\raggedright \scriptsize
-%\textit{impossible} publisher 2022
+\thispagestyle{empty} \vspace*{\fill} \parbox{.8\textwidth}{\raggedright \scriptsize
+\textit{impossible} publisher 2022
 
-%printed blindfolded
+printed blindfolded
 
-%design: \LaTeX
-%}
-%\end{titlepage}
-%\clearpage \thispagestyle{empty}\cleardoublepage
-%\newpage % Make sure the following content is on a new page
+design: \LaTeX
+}
+\end{titlepage}
+\clearpage \thispagestyle{empty}\cleardoublepage
+\newpage % Make sure the following content is on a new page
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
@@ -95,7 +101,6 @@
 
 %\input(filename)
 
-%\includeonly(INNOVgeren)
 
 \include{xuzhang}%done-1
 
@@ -119,16 +124,17 @@
 \include{RHGSMJKFZL}%done-1
 
 
-%\part{个人提升}自我改善效率基本功\\
-\part{个人提升\\ \textbullet \textbullet \textbullet \\自我改善效率基本功}
+\part{个人提升}自我改善效率基本功\\
+
+%\part{个人提升\\ \textbullet \textbullet \textbullet \\自我改善效率基本功}
 
 \include{INNOVgeren}  %done-1
 \include{PORDkefutuoyan}  %done-1
 
 
-%\part{自我管理开发过程}软件开发工程师自我改进过程\\
+\part{自我管理开发过程}软件开发工程师自我改进过程\\
 
-\part{自我管理开发过程\\ \textbullet \textbullet \textbullet \\软件开发工程师自我改进过程}
+%\part{自我管理开发过程\\ \textbullet \textbullet \textbullet \\软件开发工程师自我改进过程}
 
 \include{PERT3diangusuan} %done-1
 \include{PSPlianghgl}%done-1
@@ -137,26 +143,24 @@
 
 
 
-%\part{开始过程改进之旅}团队必须先获得管理层的关注与支持\\
+\part{利用评估开始过程改进}团队必须先获得管理层的关注与支持\\
 
-\part{开始过程改进之旅\\ \textbullet \textbullet \textbullet \\团队必须先获得管理层的关注与支持}
+%\part{利用评估开始过程改进\\ \textbullet \textbullet \textbullet \\团队必须先获得管理层的关注与支持}
 
 \include{AP1lygc}%done-1
 \include{CMMIlypg}%done-1
 
-%\part{从做好迭代回顾开始 }做好迭代回顾让团队向量化管理迈进一大步\\
+\part{从做好迭代回顾开始 }做好迭代回顾让团队向量化管理迈进一大步\\
 
-\part{从做好迭代回顾开始\\ \textbullet \textbullet \textbullet \\做好迭代回顾让团队向量化管理迈进一大步}
+%\part{从做好迭代回顾开始\\ \textbullet \textbullet \textbullet \\做好迭代回顾让团队向量化管理迈进一大步}
 
 \include{AR1whgzzb}%done-1
 \include{AR2gyfx}%done-1
 \include{RHZH}%done-1ar3
 \include{AR4hg}%done-1
 
-%\part{代码质量改进的基础}这部分参照Jeffery先生总结极限编程(XP)的三层图（在第一章里）,利用实例，先从内层的测试驱动开发(TDD)，重构(Refactoring),与结对编程(Pair Programming)等核心最佳实践开始，然后到中层的持续集成(Continuous Integration)，最后是外层的团队各角色协作/互补(Whole Team)和如何做好需求分析等。 \\
-
-\part{代码质量改进的基础\\ \textbullet \textbullet \textbullet \\这部分参照Jeffery先生总结极限编程(XP)的三层图（在第一章里）,利用实例，先从内层的测试驱动开发(TDD)，重构(Refactoring),与结对编程(Pair Programming)等核心最佳实践开始，然后到中层的持续集成(Continuous Integration)，最后是外层的团队各角色协作/互补(Whole Team)和如何做好需求分析等。}
-
+\part{基础：代码质量}这部分参照Jeffery 先生总结极限编程(XP) 的三层图（在第一章里）, 利用实例，先从内层的测试驱动开发(TDD)，重构(Refactoring), 与结对编程(PairProgramming) 等核心最佳实践开始，然后到中层的持续集成(ContinuousIntegration)，最后是外层的团队各角色协作/互补(Whole Team) 和如何做好需求分析等。
+%\part{基础：代码质量\\ \textbullet \textbullet \textbullet \\这部分参照Jeffery 先生总结极限编程(XP) 的三层图（在第一章里）, 利用实例，先从内层的测试驱动开发(TDD)，重构(Refactoring), 与结对编程(PairProgramming) 等核心最佳实践开始，然后到中层的持续集成(ContinuousIntegration)，最后是外层的团队各角色协作/互补(Whole Team) 和如何做好需求分析等。}
 
 
 \include{TDDcsqdkf}%done-1
@@ -169,11 +173,11 @@
 
 
 
-%\part{度量与分析}当团队开始养成每天收集数据的习惯，在迭代回顾时分析数据，公司便可以开始准备度量与分析。（注）
+\part{度量与分析}当团队开始养成每天收集数据的习惯，在迭代回顾时分析数据，公司便可以开始准备度量与分析。
 
-\part{度量与分析\\ \textbullet \textbullet \textbullet \\当团队开始养成每天收集数据的习惯，在迭代回顾时分析数据，公司便可以开始准备度量与分析。（注）}
+%\part{度量与分析\\ \textbullet \textbullet \textbullet \\当团队开始养成每天收集数据的习惯，在迭代回顾时分析数据，公司便可以开始准备度量与分析。（注）}
 
-要做好度量与分析，跟过程改进一样，要针对目标，制定度量计划。
+（注:要做好度量与分析，跟过程改进一样，要针对目标，制定度量计划。)
 本部分开头会以问卷调查为例，
 介绍度量计划的主要元素，
 
@@ -194,9 +198,9 @@
 \include{M3CC}%done-1
 
 
-%\part{总结} 管理者应如何支持团队做好敏捷开发，为公司增值\\
+\part{总结} 管理者应如何支持团队做好敏捷开发，为公司增值\\
 
-\part{总结\\ \textbullet \textbullet \textbullet \\管理者应如何支持团队做好敏捷开发，为公司增值}
+%\part{总结\\ \textbullet \textbullet \textbullet \\管理者应如何支持团队做好敏捷开发，为公司增值}
 
 \include{MGRcjhdyj}%done-1
 \include{EOIdbh}%done-1
