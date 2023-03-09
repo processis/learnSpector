@@ -1,4 +1,4 @@
-#ch5
+#ch5 BernBeta.R
 
 BernBeta = function(priorShape,dataVec,credMass=0.95,saveGraph=F)
 {
@@ -158,7 +158,7 @@ plotPost(thetaDiff , xlab=expression(theta[1]-theta[2]),compVal=0.0,
          breaks=30)
 
 
-#8.8.1
+#8.8.1 BernTwoGrid.R
 nInt = 501
 theta1=seq(from=((1/nInt)/2),to=(1-((1/nInt)/2)),by=(1/nInt))
 theta2=theta1
@@ -290,7 +290,7 @@ if(wantSaveGraph){dev.copy2eps(file=plotFileName)}
 
 
 
-#9.5.1
+#9.5.1 BernBetaMuKappaBugs.R
 
 graphics.off()
 rm(list=ls(all=TRUE))
