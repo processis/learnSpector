@@ -1,0 +1,314 @@
+model {
+Y ~ dbin(0. 5, 8)
+P2 <- step(2. 5 - Y) # does Y = 2, 1 or 0?
+}
+
+
+
+
+model {
+Y ~ dt(10, 2, 4)
+}
+for (i in 1: 1000) {Y[i] ~ dt(10, 2, 4)}
+
+
+Z ~ dnorm(0, 1)
+Y <- pow(2*Z + 1, 3)
+P10 <- step(Y - 10)
+
+
+for (i in 1: 20) {Y[i] ~ dgamma(4, 0. 04)}
+cum[1] <- Y[1]
+for (i in 2: 20) {
+cum[i] <- cum[i - 1] + Y[i]
+}
+for (i in 1: 20) {
+cum. step[i] <- i*step(1000 - cum[i] )
+}
+number <- ranked(cum. step[] , 20) # maximum number in cum. step
+check <- equals(cum. step[20] , 0) # always 1 if I=20 big enough
+
+
+
+
+sN ~ dexp(0. 5) # life without transplant (mean 2)
+oT ~ dbern(0. 8) # survive operation (prob 0. 8)
+sP ~ dexp(0. 2) # life if survive transplant (mean 5)
+sT <- oT*sP # total life time if choose transplant
+Ic <- 20000 + 3000*sT # total additional cost of transplant
+Is <- sT - sN # total additional survival
+r <- Ic/Is # individual cost per additional year
+
+
+
+theta ~ dbeta(a, b)
+Y ~ dbin(theta, n)
+
+
+theta ~ dbeta(3, 27) # prior distribution
+Y ~ dbin(theta, 20) # sampling distribution
+P6 <- step(Y - 5. 5) # =1 if y >= 6, 0 otherwise
+
+
+
+thetaN <- 2 # expected lifetime without transplant
+thetaT ~ dbeta(8,2) # probability of surviving operation
+thetaP ~ dnorm(5,1) # expected survival post-transplant (mean 5, sd 1)
+thetaC ~ dnorm(3000,0. 000001)
+# expected cost per year (mean 3000, sd 1000)
+E. c <- (20000 + thetaC*thetaT*thetaP)/1000
+# expected additional cost of transplant
+# in thousands of pounds
+E. e <- thetaT*thetaP - thetaN
+# expected total additional survival
+ICER <- E.c/E.e # incremental cost-effectiveness ratio
+
+
+for (i in 1: 21) {
+K[i] <- (i-1)*5
+INB[i] <- E. e*K[i] - E. c
+Q[i] <- step(INB[i] )
+}
+
+
+
+
+6.1.1
+model {
+for (i in 1: 5) {
+y[i] ~ dnorm(mu[i] , tau)
+mu[i] <- alpha + beta*(x[i] - mean(x[] ))
+}
+# Jeffreys priors
+alpha ~ dflat()
+beta ~ dflat()
+tau <- 1/sigma2
+log(sigma2) <- 2*log. sigma
+log. sigma ~ dflat()
+}
+list(y = c(177,236,285,350,376), x = c(8,15,22,29,36))
+
+
+
+
+6.1.2
+
+for (i in 1: 23) {
+y[i] ~ dnorm(mu[i] , tau)
+D2[i] <- equals(DIST[i] , 2)
+D3[i] <- equals(DIST[i] , 3)
+mu[i] <- beta0 + beta[1] *MAN[i]
++ beta[2] *D2[i] + beta[3] *D3[i]
+}
+beta0 ~ dnorm(0, 0. 0001)
+for (j in 1: 3) {
+beta[j] ~ dnorm(0, 0. 0001)
+}
+tau <- 1/pow(sigma, 2)
+# uniform prior on an interpretable scale
+sigma ~ dunif(0, 100)
+
+
+mu[i] <- beta0 + beta[1] *MAN[i] + gamma[DIST[i] ]
+
+gamma[1] <- 0
+gamma[2] ~ dnorm(0, 0. 0001)
+gamma[3] ~ dnorm(0, 0. 0001)
+
+6.1.3
+
+mu[i] <- beta0 + beta[1] *MAN[i]
+
+
+Example 6.2.1
+
+y[i] ~ dt(mu[i] , tau, dof)
+
+Example 6.3.1
+
+model {
+for(j in 1: N) {
+for (i in 1: 4) {
+y[i,j] ~ dnorm(mu[i,j] , tau[i] )
+}
+mu[1,j] <- Linf[1] - (Linf[1] - L0[1] )*exp(-K[1] *x[1,j] )
+mu[2,j] <- Linf[2] - (Linf[2] - L0[2] )*exp(-K[2] *x[2,j] )
+mu[3,j] <- alpha[3] - beta[3] *pow(gamma[3] , x[3,j] )
+mu[4,j] <- alpha[4] - beta[4] *pow(gamma[4] , x[4,j] )
+}
+L0[1] ~ dunif(0, 100)
+L0[2] ~ dnorm(0, 0. 0001)I(0, Linf[2] )
+Linf[1] <- L0[1] + beta[1]
+Linf[2] ~ dnorm(0, 0. 0001)I(L0[2] , )
+K[1] ~ dunif(0, 100)
+K[2] ~ dunif(0, 100)
+for (i in 1: 2) {alpha[i] <- Linf[i] }
+for (i in 3: 4) {alpha[i] ~ dunif(0, 100)}
+beta[1] ~ dunif(0, 100)
+beta[2] <- Linf[2] - L0[2]
+for (i in 3: 4) {beta[i] ~ dunif(0, 100)}
+for (i in 1: 2) {gamma[i] <- exp(-K[i] )}
+gamma[3] ~ dunif(0, 1)
+gamma[4] ~ dgamma(0. 001, 0. 001)I(0, 1)
+for (i in 1: 4) {
+tau[i] <- 1/sigma2[i]
+log(sigma2[i] ) <- 2*log. sigma[i]
+log. sigma[i] ~ dunif(-10, 10)
+}
+}
+
+
+Example 6.4.1
+
+model {
+for (i in 1: 20) {Y[i, 1: 4] ~ dmnorm(mu[] , Sigma. inv[,] )}
+for (j in 1: 4) {mu[j] <- alpha + beta*x[j] }
+alpha ~ dnorm(0, 0. 0001)
+beta ~ dnorm(0, 0. 0001)
+Sigma. inv[1: 4, 1: 4] ~ dwish(R[,] , 4)
+Sigma[1: 4, 1: 4] <- inverse(Sigma. inv[,] )
+}
+
+list(Y = structure(
+. Data = c(47. 8, 48. 8, 49. 0, 49. 7,
+46. 4, 47. 3, 47. 7, 48. 4,
+. . . . . . . . . . . . . . . .
+46. 3, 47. 6, 51. 3, 51. 8),
+. Dim = c(20, 4)),
+x = c(8. 0, 8. 5, 9. 0, 9. 5),
+R = structure(
+. Data = c(4, 0, 0, 0,
+0, 4, 0, 0,
+0, 0, 4, 0,
+0, 0, 0, 4),
+. Dim = c(4, 4)))
+
+
+Example 6.5.1
+
+for (i in 1: 8) {
+y[i] ~ dbin(p[i] , n[i] )
+logit(p[i] ) <- alpha + beta*(x[i] - mean(x[] ))
+}
+phat[i] <- y[i] /n[i]
+yhat[i] <- n[i] *p[i]
+p[i] <- phi(alpha + beta*(x[i] - mean(x[] )))
+
+
+Example 6.5.2
+
+for (i in 1: 6) {
+for (j in 1: 3) {
+y[i,j] ~ dpois(mu[i] )
+}
+log(mu[i] ) <- alpha + beta*log(x[i] + 10) + gamma*x[i]
+}
+alpha ~ dnorm(0, 0. 0001)
+beta ~ dnorm(0, 0. 0001)
+gamma ~ dnorm(0, 0. 0001)
+
+for (i in 1: 6) {y. pred[i] ~ dpois(mu[i] )}
+
+y[i,j] ~ dnegbin(p[i] , r)
+
+r ~ dcat(pi[] )
+for (i in 1: max) {pi[i] <- 1/max}
+
+
+Example 7.1.1
+
+for (i in 1: 2) {
+y[i] ~ dbin(p[i] , n[i] )
+p[i] ~ dunif(0, 1)
+}
+
+list(n=c(4,4), y=c(3,1))
+
+
+
+alpha <- 1; beta <- 1;
+p[1] ~ dbeta(alpha, beta)
+n. corr <- 6 # for rho=0. 75, or n. corr <- 14 for rho=0. 875
+x ~ dbin(p[1] , n. corr)
+a. post <- alpha + x
+b. post <- alpha + n. corr - x
+p[2] ~ dbeta(a. post, b. post)
+
+post <- step(p[1] - p[2] )
+
+
+Example 7.2.1
+
+for (i in 1: 4) {
+count[i, 1: 5] ~ dmulti(q[i, 1: 5] , M[i] )
+q[i, 1: 5] ~ ddirch(alpha[] )
+}
+for (r in 1: 5) {alpha[r] <- 1}
+
+
+Example 7.2.2
+
+NAA[1: 3] ~ dmulti(XAA[1: 3] , KAA)
+NAB[1: 3] ~ dmulti(XAB[1: 3] , KAB)
+NBB[1: 3] ~ dmulti(XBB[1: 3] , KBB)
+XAA[1] <- (1 - sigma)*p + sigma
+XAA[2] <- (1 - sigma)*q
+XAA[3] <- 0
+XAB[1] <- (1 - sigma)*p/2 + sigma/4
+XAB[2] <- 0. 5
+XAB[3] <- (1 - sigma)*q/2 + sigma/4
+XBB[1] <- 0
+XBB[2] <- (1 - sigma)*p
+XBB[3] <- (1 - sigma)*q + sigma
+KAA <- sum(NAA[] )
+KAB <- sum(NAB[] )
+KBB <- sum(NBB[] )
+p ~ dunif(0, 1)
+sigma ~ dunif(0, 1)
+q <- 1 - p
+
+
+Example 7.2.3
+
+for (i in 1: 2) {
+count[i, 1: 5] ~ dmulti(q[i, 1: 5] , M[i] )
+for (r in 1: 5) {
+q[i,r] <- phi[i,r] /sum(phi[i,] )
+log(phi[i,r] ) <- a[r] + b. treat[r] *treat[i]
+}
+}
+for (r in 2: 5) {a[r] ~ dnorm(0, 0. 00001)}
+a[1] <- 0 #
+b. treat[1] <- 0 # giving phi[i,1] = 1
+b. treat[2] ~ dnorm(0, 0. 00001)
+or. treat <- exp(b. treat[2] )
+# no treatment effect on transitions other than to UTW
+for (r in 3: 5) {b. treat[r] <- 0}
+treat[1] <- 0
+treat[2] <- 1
+
+
+
+Example 7.3.1
+
+for (i in 1: N) {
+Score[i] ~ dcat(p[i,] )
+# define in terms of cumulative probabilities
+p[i,1] <- 1 - Q[i,1]
+for (r in 2: 5) {
+p[i,r] <- Q[i,r-1] - Q[i,r]
+}
+p[i,6] <- Q[i,5]
+for (r in 1: 5) {
+logit(Q[i,r] ) <- b. apd*lAPD[i] - c[r]
+}
+}
+for (i in 1: 5) {dc[i] ~ dunif(0, 20)}
+c[1] <- dc[1]
+for (i in 2: 5) {
+c[i] <- c[i-1] + dc[i]
+}
+b. apd ~ dnorm(0, 0. 001)
+or. apd <- exp(b. apd)
+
+
