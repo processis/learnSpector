@@ -140,7 +140,7 @@ values=c('75.99','(20.30)','55.20')
 as.numeric(gsub('\\(([0-9.]+)\\)','-\\1',values))
 
 str= 'report: 17 value=12 time=2:00'
-sub('valus=([^ ]+)','\\1',str)
+sub('value=([^ ]+)','\\1',str)
 
 sub('^.*value=([^ ]+).*$','\\1',str)
 
