@@ -10,3 +10,6 @@ Data manipulation
 
 ##2023.1.31
 project learnSpector in Rstudio : can pull and push ok 
+
+###20250411
+0411 push test
