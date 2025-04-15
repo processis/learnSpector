@@ -111,3 +111,4 @@ g <- function(x, sig_digits) {
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("Welcome to my package")
 }
+
