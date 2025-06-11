@@ -1,0 +1,17 @@
+test1-
+#desha <- subset(desha,Language1==1)
+
+test2-
+ desha <- subset(desha,Language1==1)
+#desha <- subset(desha,Language2==1)
+#desha <- subset(desha,Language3==1)
+
+test3-
+#desha <- subset(desha,Language1==1)
+desha <- subset(desha,Language2==1)
+#desha <- subset(desha,Language3==1)
+
+test4-
+#desha <- subset(desha,Language1==1)
+#desha <- subset(desha,Language2==1)
+desha <- subset(desha,Language3==1)
