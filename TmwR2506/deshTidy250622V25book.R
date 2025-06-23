@@ -7,7 +7,7 @@ tbDeshanais_te
 library(tidyverse)
 library(tidymodels)
 tidymodels_prefer()
-tbDesharnais <- read_csv("Desharnais77.csv",col_names = TRUE,na = '-1',
+tbDesharnais <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/Desharnais77.csv",col_names = TRUE,na = '-1',
                          cols(
                            'Project' = col_integer(),
                            'TeamExp' = col_integer(),

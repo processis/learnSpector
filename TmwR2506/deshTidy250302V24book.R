@@ -23,6 +23,23 @@ tbDesharnais <- read_csv("cleanDesharnais74.csv",col_names = TRUE,na = '-1',
                            'Language' = col_character(),
                          )
 )
+
+tbDesharnais <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/cleanDesharnais77.csv",col_names = TRUE,na = '-1',
+                         cols(
+                           'Project' = col_integer(),
+                           'TeamExp' = col_integer(),
+                           'ManagerExp' = col_integer(),
+                           'YearEnd' = col_integer(),
+                           'Length' = col_integer(),
+                           'Effort' = col_integer(),
+                           'Transactions' = col_integer(),
+                           'Entities' = col_integer(),
+                           'PointsNonAdjust' = col_integer(),
+                           'Adjustment' = col_integer(),
+                           'PointsAjust' = col_integer(),
+                           'Language' = col_character(),
+                         )
+)
 #
 print(tbDesharnais)
 #histograms , check skew
@@ -110,6 +127,7 @@ predict(lm_form_fit, new_data = tbDesharnais_test_small)
 #
 #ch9 judge model effectiveness
 tbDesharnais_test_res <- bind_cols(tbDesharnais_test_res, tbDesharnais_test %>% select(Effort))
+
 tbDesharnais_test_res
 #plot the data  before computing metrics: 
 ggplot(tbDesharnais_test_res, aes(x = Effort, y = .pred)) + 
