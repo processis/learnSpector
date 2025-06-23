@@ -167,7 +167,7 @@ predict(rf_fit, tbDesharnais_test %>% slice(1:6))
 
 
 
-
+ 
 # 创建随机森林模型
 rf_model <- 
   rand_forest(
