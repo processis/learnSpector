@@ -49,18 +49,35 @@ tbDesharnais_test  <-  testing(tbDesharnais_split)
 library(tidymodels)
 library(recipes)
 
+#simple_desh <-
+#  recipe(Effort ~ TeamExp + PointsNonAdjust + Language, data = tbDesharnais_train) %>%
+#  step_log(PointsNonAdjust, base = 10) %>%
+#  step_dummy(Language,
+#             levels = c(2,3)) 
+#simple_desh
+
+#simple2_desh <-
+#  recipe(Effort ~ TeamExp + PointsNonAdjust+ Language, data = tbDesharnais_train) %>%
+#  step_log(PointsNonAdjust, base = 10) %>%
+#  step_dummy(all_nominal_predictors()) 
+#simple2_desh
+
 simple_desh <-
-  recipe(Effort ~ TeamExp + PointsNonAdjust + Language, data = tbDesharnais_train) %>%
+  recipe(Effort ~ TeamExp + PointsNonAdjust+ManagerExp + Language, data = tbDesharnais_train) %>%
   step_log(PointsNonAdjust, base = 10) %>%
   step_dummy(Language,
              levels = c(2,3)) 
 simple_desh
 
 simple2_desh <-
-  recipe(Effort ~ TeamExp + PointsNonAdjust + Language, data = tbDesharnais_train) %>%
+  recipe(Effort ~ TeamExp + PointsNonAdjust+ManagerExp+ Language, data = tbDesharnais_train) %>%
   step_log(PointsNonAdjust, base = 10) %>%
   step_dummy(all_nominal_predictors()) 
 simple2_desh
+
+
+
+
 
 rf_recipe <- 
   recipe(Effort ~ ., data = tbDesharnais_train) %>%
@@ -70,6 +87,7 @@ rf_recipe <-
 
 # 查看recipe
 rf_recipe
+
 
 
 #####################################################
@@ -88,7 +106,7 @@ lm_wflow
 
 lm_wflow <-
   lm_wflow %>%
-  add_formula(Effort ~ TeamExp + PointsNonAdjust)
+  add_formula(Effort ~ TeamExp + PointsNonAdjust+ManagerExp)
 lm_wflow
 
 lm_fit <- fit(lm_wflow, tbDesharnais_train)
@@ -125,6 +143,8 @@ lm_fit <- fit(lm_wflow, tbDesharnais_train)
 predict(lm_fit, tbDesharnais_test %>% slice(1:6))
 
 
+
+
 ###########################################
 
 
@@ -140,9 +160,23 @@ rf_model <- rand_forest(
 
 
 rf_workflow <- workflow() %>%
-  add_recipe(simple_desh) %>%
+  add_recipe(rf_recipe) %>%
   add_model(rf_model)
 
+rf_workflow
+
+rf_workflow <-
+  rf_workflow %>%
+  add_formula(Effort ~ TeamExp + PointsNonAdjust)
+
+rf_workflow
+
+fit(rf_workflow, tbDesharnais_train)
+
+rf_workflow <-
+  rf_workflow%>%
+  remove_variables() %>%
+  add_recipe(simple_desh)
 rf_workflow
 
 rf_fit <- fit(rf_workflow, tbDesharnais_train)
