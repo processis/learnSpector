@@ -1,6 +1,6 @@
 write.table(testResults,file="/home/user/Downloads/testResultsSvmRfCubist.csv",sep=",") # output testResults.csv
 # Read Desharnais77 public dataset from promise uottawa repository
-desharnais <- read.table("/media/user/娱乐/learnTitanic/the big R/dashar/desharnaisLogEffort77.csv",
+desharnais <- read.table("/media/user/1907USB/2025github/learnSpector/dashar/desharnaisLogEffort77.csv",
                                                   sep = ",", header = TRUE)
 desha <- subset(desharnais,Project!=76)
 # continue to remove incomplete rows, bottom up, because not enough data in these projects
