@@ -1,9 +1,13 @@
-introa --  敏捷开发小手册书appch1116
+2025.06.25
 
-shiny&master shiny  --  shiny代码示例
+代码放在learnSpector/TmwR2506/ TmwR分支
 
-agilebook  --  上一本书全
+OLD文件夹放置了老方法抽样和1-7为test train 代码和结果
 
-agileAbook  --  上一本书仅代码
+其中读取数据是（cleanDeshrnaisLogEffort77.csv）Lange 取log的81数据，其中的-1值左边变为平均值2，右边变为平均值3，分别做了logeffort与teamexp 和pointadjust 两个变量和 logeffort与teamexp 和pointadjust managerexp 的分析 结果用final数据表再次计算
 
-desha --  数据分析数据
+tidymodeldata放了需要读取的数据，tidydeepseek 放置了一些deepseek自动生成的代码
+
+test为1-7时结果几乎对应，随机抽样（73,66,56,41,32,22,13）teamexp+pointadjust 随机PCR RMSE RF RMSE RR 差异比较大
+
+teamexp+pointadjust+managerexp 随机LM RF NNET RR 和 PCR RF RMSE 差异都比较大 1-7数据 teamexp+pointadjust+managerexpPCR RMSE 差异比较大 
