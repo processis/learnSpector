@@ -1,5 +1,3 @@
-###DEEPSEEK
-
 #R tidymodel parsnip elasticnet machine learning R code example
 
 # Load required packages
@@ -10,17 +8,32 @@ library(tidyverse)   # For data manipulation and visualization
 # Set seed for reproducibility
 set.seed(123)
 
-# Example dataset - using mtcars for demonstration
-data(mtcars)
+data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv") %>% 
+  mutate(logEffort = log(Effort))  # 对Effort取对数
 
-# Split data into training and testing sets
-split <- initial_split(mtcars, prop = 0.8)
-train_data <- training(split)
-test_data <- testing(split)
+data$TeamExp<-as.numeric(data$TeamExp)
+data$ManagerExp<-as.numeric(data$ManagerExp)
+
+
+train_data <- subset(data,Project!=73)
+train_data <- subset(train_data,Project!=66)
+train_data <- subset(train_data,Project!=56)
+train_data <- subset(train_data,Project!=41)
+train_data <- subset(train_data,Project!=32)
+train_data <- subset(train_data,Project!=22)
+#tbDesharnais_train <- subset(tbDesharnais_train,Project!=32)
+train_data <- subset(train_data,Project!=13)
+
+
+test_data <- data[c(73,66,56,41,32,22,13), ]
+
+# 2. 划分训练集和测试集（Project 1-7为测试集）
+test_data <- data %>% filter(Project %in% 1:7)
+train_data <- data %>% filter(!Project %in% 1:7)
 
 # Create a recipe for preprocessing
 # (Elastic net benefits from standardized predictors)
-recipe <- recipe(mpg  ~ ., data = train_data) %>%
+recipe <- recipe(logEffort ~ ., data = train_data) %>%
   step_normalize(all_numeric_predictors())
 
 # Specify the elastic net model
@@ -70,7 +83,7 @@ final_fit <- final_workflow %>%
 # Evaluate on test data
 test_results <- test_data %>% 
   bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = mpg, estimate = .pred)
+  metrics(truth = logEffort, estimate = .pred)
 
 # Print test metrics
 print(test_results)
@@ -91,10 +104,7 @@ final_coefs <- final_fit %>%
 
 print(final_coefs)
 
-
-
-
-#################################
+###################################################PCR
 
 ####R tidymodel parsniprincipal component regression PCR machine learning r code example
 
@@ -103,20 +113,29 @@ library(tidymodels)  # Includes parsnip, recipes, workflows, etc.
 library(pls)         # Engine for PCR
 library(tidyverse)   # For data manipulation and visualization
 
-# Set seed for reproducibility
-set.seed(123)
+data$TeamExp<-as.numeric(data$TeamExp)
+data$ManagerExp<-as.numeric(data$ManagerExp)
 
-# Example dataset - using mtcars for demonstration
-data(mtcars)
 
-# Split data into training and testing sets
-split <- initial_split(mtcars, prop = 0.8)
-train_data <- training(split)
-test_data <- testing(split)
+train_data <- subset(data,Project!=73)
+train_data <- subset(train_data,Project!=66)
+train_data <- subset(train_data,Project!=56)
+train_data <- subset(train_data,Project!=41)
+train_data <- subset(train_data,Project!=32)
+train_data <- subset(train_data,Project!=22)
+#tbDesharnais_train <- subset(tbDesharnais_train,Project!=32)
+train_data <- subset(train_data,Project!=13)
+
+
+test_data <- data[c(73,66,56,41,32,22,13), ]
+
+# 2. 划分训练集和测试集（Project 1-7为测试集）
+test_data <- data %>% filter(Project %in% 1:7)
+train_data <- data %>% filter(!Project %in% 1:7)
 
 # Create a recipe for preprocessing
 # PCR benefits from standardized predictors and PCA transformation
-pcr_recipe <- recipe(mpg ~ ., data = train_data) %>%
+pcr_recipe <- recipe(logEffort ~ ., data = train_data) %>%
   step_normalize(all_numeric_predictors()) %>%  # Center and scale
   step_pca(all_numeric_predictors(), num_comp = tune())  # Tune number of components
 
@@ -161,7 +180,7 @@ final_fit <- final_workflow %>%
 # Evaluate on test data
 test_results <- test_data %>% 
   bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = mpg, estimate = .pred)
+  metrics(truth = logEffort, estimate = .pred)
 
 # Print test metrics
 print(test_results)
@@ -190,13 +209,8 @@ final_fit %>%
        y = "Percent Variance Explained") +
   theme_minimal()
 
+###############################################################cubist
 
-
-########################################  
-
-#######R tidymodel parsnip cubist machine learning R code example regression mode
-
-# Load required packages
 library(tidymodels)  # Includes parsnip, recipes, workflows, etc.
 library(Cubist)      # Engine for Cubist models
 library(tidyverse)   # For data manipulation and visualization
@@ -205,21 +219,29 @@ library(rules)
 # Set seed for reproducibility
 set.seed(123)
 
-# Example dataset - using Boston housing data from mlbench
-library(mlbench)
-data(BostonHousing)
-data <- BostonHousing %>% 
-  select(-chas) %>%  # Remove categorical variable for simplicity
-  as_tibble()
+data$TeamExp<-as.numeric(data$TeamExp)
+data$ManagerExp<-as.numeric(data$ManagerExp)
 
-# Split data into training and testing sets
-split <- initial_split(data, prop = 0.8)
-train_data <- training(split)
-test_data <- testing(split)
+
+train_data <- subset(data,Project!=73)
+train_data <- subset(train_data,Project!=66)
+train_data <- subset(train_data,Project!=56)
+train_data <- subset(train_data,Project!=41)
+train_data <- subset(train_data,Project!=32)
+train_data <- subset(train_data,Project!=22)
+#tbDesharnais_train <- subset(tbDesharnais_train,Project!=32)
+train_data <- subset(train_data,Project!=13)
+
+
+test_data <- data[c(73,66,56,41,32,22,13), ]
+
+# 2. 划分训练集和测试集（Project 1-7为测试集）
+test_data <- data %>% filter(Project %in% 1:7)
+train_data <- data %>% filter(!Project %in% 1:7)
 
 # Create a recipe for preprocessing
 # Cubist generally doesn't require extensive preprocessing
-cubist_recipe <- recipe(medv ~ ., data = train_data)
+cubist_recipe <- recipe(logEffort ~ ., data = train_data)
 
 # Specify the Cubist model with tuning parameters
 cubist_model <- cubist_rules(
@@ -266,7 +288,7 @@ final_fit <- final_workflow %>%
 # Evaluate on test data
 test_results <- test_data %>% 
   bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = medv, estimate = .pred)
+  metrics(truth = logEffort, estimate = .pred)
 
 # Print test metrics
 print(test_results)
@@ -288,159 +310,39 @@ final_fit %>%
   geom_col(fill = "steelblue") +
   ggtitle("Cubist Variable Importance")
 
-# Partial dependence plot for an important variable
-# (Example using crim - change to your most important variable)
-final_fit %>% 
-  extract_fit_parsnip() %>% 
-  pdp::partial(pred.var = "crim", train = train_data) %>% 
-  autoplot() +
-  ggtitle("Partial Dependence on Crime Rate")
 
-####################################error
-
-###############R tidymodel parsnip neural network machine learning R code example regression mode
-
-# Load required packages
-library(tidymodels)  # Includes parsnip, recipes, workflows, etc.
-library(keras)       # Engine for neural networks (TensorFlow backend)
-library(tidyverse)   # For data manipulation and visualization
-
-reticulate::install_miniconda()
-keras::install_keras(mothod="conda",tensorflow="2.9")
-
-# Set seed for reproducibility
-set.seed(123)
-tensorflow::set_random_seed(123)  # For TensorFlow reproducibility
-
-# Example dataset - using Boston housing data from mlbench
-library(mlbench)
-data(BostonHousing)
-data <- BostonHousing %>% 
-  select(-chas) %>%  # Remove categorical variable for simplicity
-  as_tibble()
-
-# Split data into training and testing sets
-split <- initial_split(data, prop = 0.8)
-train_data <- training(split)
-test_data <- testing(split)
-
-# Create a recipe for preprocessing
-# Neural networks benefit from standardized predictors
-nn_recipe <- recipe(medv ~ ., data = train_data) %>%
-  step_normalize(all_numeric_predictors())
-
-# Specify the neural network model with tuning parameters
-nn_model <- mlp(
-  hidden_units = tune(),  # Number of units in hidden layer
-  penalty = tune(),       # L2 regularization (weight decay)
-  epochs = tune(),        # Number of training iterations
-  dropout = tune()        # Dropout rate (for regularization)
-) %>% 
-  set_engine("keras", verbose = 0) %>% 
-  set_mode("regression")
-
-# Set up workflow
-nn_workflow <- workflow() %>% 
-  add_recipe(nn_recipe) %>% 
-  add_model(nn_model)
-
-# Create cross-validation folds for tuning
-folds <- vfold_cv(train_data, v = 5)
-
-# Set up tuning grid
-tune_grid <- grid_regular(
-  hidden_units(range = c(5, 50)),  # Try 5 to 50 hidden units
-  penalty(range = c(-5, 0)),       # 10^seq(-5, 0) regularization
-  epochs(range = c(50, 200)),      # Training iterations
-  dropout(range = c(0, 0.3)),      # Dropout rate
-  levels = 3                       # Number of values for each parameter
-)
-
-# Tune the model (may take some time)
-tune_results <- tune_grid(
-  nn_workflow,
-  resamples = folds,
-  grid = tune_grid,
-  metrics = metric_set(rmse, rsq),
-  control = control_grid(verbose = TRUE)  # Show progress
-)
-
-# Select the best model based on RMSE
-best_model <- select_best(tune_results, metric = "rmse")
-
-# Finalize the workflow with the best parameters
-final_workflow <- nn_workflow %>% 
-  finalize_workflow(best_model)
-
-# Fit the final model on the full training data
-final_fit <- final_workflow %>% 
-  fit(data = train_data)
-
-# Evaluate on test data
-test_results <- test_data %>% 
-  bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = medv, estimate = .pred)
-
-# Print test metrics
-print(test_results)
-
-# Plot tuning results
-autoplot(tune_results) +
-  ggtitle("Neural Network Tuning Results")
-
-# Plot training history (if using keras engine)
-final_fit %>% 
-  extract_fit_engine() %>% 
-  plot()
-
-# Variable importance (permutation importance)
-library(vip)
-final_fit %>% 
-  extract_fit_parsnip() %>% 
-  vip(method = "permute", 
-      target = "medv", 
-      metric = "rsq", 
-      nsim = 10,
-      train = bake(prep(nn_recipe), train_data, composition = "matrix"),
-      pred_wrapper = function(object, newdata) {
-        predict(object, as.matrix(newdata)) %>% pull(.pred)
-      }) +
-  ggtitle("Neural Network Variable Importance")
-
-# Save the model for later use (optional)
-# saveRDS(final_fit, "neural_network_model.rds")
-
-
-
-################################################
-
-#R tidymodel parsnip random forest machine learning R code example regression mode
-
-# Load required packages
+######################################################random forest
 library(tidymodels)  # Includes parsnip, recipes, workflows, etc.
 library(ranger)      # Engine for random forest
 library(tidyverse)   # For data manipulation and visualization
 library(vip)         # For variable importance plots
 library(DALEX)       # For model explanations (optional)
 
-# Set seed for reproducibility
 set.seed(123)
 
-# Example dataset - using Boston housing data from mlbench
-library(mlbench)
-data(BostonHousing)
-data <- BostonHousing %>% 
-  select(-chas) %>%  # Remove categorical variable for simplicity
-  as_tibble()
+data$TeamExp<-as.numeric(data$TeamExp)
+data$ManagerExp<-as.numeric(data$ManagerExp)
 
-# Split data into training and testing sets
-split <- initial_split(data, prop = 0.8)
-train_data <- training(split)
-test_data <- testing(split)
+
+train_data <- subset(data,Project!=73)
+train_data <- subset(train_data,Project!=66)
+train_data <- subset(train_data,Project!=56)
+train_data <- subset(train_data,Project!=41)
+train_data <- subset(train_data,Project!=32)
+train_data <- subset(train_data,Project!=22)
+#tbDesharnais_train <- subset(tbDesharnais_train,Project!=32)
+train_data <- subset(train_data,Project!=13)
+
+
+test_data <- data[c(73,66,56,41,32,22,13), ]
+
+# 2. 划分训练集和测试集（Project 1-7为测试集）
+test_data <- data %>% filter(Project %in% 1:7)
+train_data <- data %>% filter(!Project %in% 1:7)
 
 # Create a recipe for preprocessing
 # Random forests don't typically need extensive preprocessing
-rf_recipe <- recipe(medv ~ ., data = train_data)
+rf_recipe <- recipe(logEffort ~ ., data = train_data)
 
 # Specify the Random Forest model with tuning parameters
 rf_model <- rand_forest(
@@ -490,7 +392,7 @@ final_fit <- final_workflow %>%
 # Evaluate on test data
 test_results <- test_data %>% 
   bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = medv, estimate = .pred)
+  metrics(truth = logEffort, estimate = .pred)
 
 # Print test metrics
 print(test_results)
@@ -503,24 +405,3 @@ autoplot(tune_results) +
 vip(final_fit) +
   ggtitle("Random Forest Variable Importance")
 
-# Partial dependence plot for an important variable
-final_fit %>% 
-  extract_fit_parsnip() %>% 
-  pdp::partial(pred.var = "lstat", train = train_data) %>% 
-  autoplot() +
-  ggtitle("Partial Dependence on % Lower Status")
-
-# Model explanations with DALEX (optional)
-explainer <- explain_tidymodels(
-  final_fit,
-  data = select(train_data, -medv),
-  y = train_data$medv,
-  label = "Random Forest"
-)
-
-# Feature importance
-model_parts(explainer) %>% 
-  plot()
-
-# Save the model for later use (optional)
-# saveRDS(final_fit, "random_forest_model.rds")
