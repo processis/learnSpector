@@ -8,8 +8,14 @@ library(tidyverse)   # For data manipulation and visualization
 # Set seed for reproducibility
 set.seed(123)
 
-data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv") %>% 
-  mutate(logEffort = log(Effort))  # 对Effort取对数
+data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv") 
+#   %>%  mutate(logEffort = log(Effort))  # 对Effort取对数
+
+data <- data %>% mutate(Effort = log10(Effort))
+data <- data %>% mutate(PointsAjust = log10(PointsAjust))
+data <- data %>% mutate(PointsNonAdjust = log10(PointsNonAdjust))
+
+
 
 data$TeamExp<-as.numeric(data$TeamExp)
 data$ManagerExp<-as.numeric(data$ManagerExp)
@@ -33,7 +39,7 @@ train_data <- data %>% filter(!Project %in% 1:7)
 
 # Create a recipe for preprocessing
 # (Elastic net benefits from standardized predictors)
-recipe <- recipe(logEffort ~ ., data = train_data) %>%
+recipe <- recipe(Effort ~ ., data = train_data) %>%
   step_normalize(all_numeric_predictors())
 
 # Specify the elastic net model
@@ -83,7 +89,7 @@ final_fit <- final_workflow %>%
 # Evaluate on test data
 test_results <- test_data %>% 
   bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = logEffort, estimate = .pred)
+  metrics(truth = Effort, estimate = .pred)
 
 # Print test metrics
 print(test_results)
@@ -135,7 +141,7 @@ train_data <- data %>% filter(!Project %in% 1:7)
 
 # Create a recipe for preprocessing
 # PCR benefits from standardized predictors and PCA transformation
-pcr_recipe <- recipe(logEffort ~ ., data = train_data) %>%
+pcr_recipe <- recipe(Effort ~ ., data = train_data) %>%
   step_normalize(all_numeric_predictors()) %>%  # Center and scale
   step_pca(all_numeric_predictors(), num_comp = tune())  # Tune number of components
 
@@ -180,7 +186,7 @@ final_fit <- final_workflow %>%
 # Evaluate on test data
 test_results <- test_data %>% 
   bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = logEffort, estimate = .pred)
+  metrics(truth = Effort, estimate = .pred)
 
 # Print test metrics
 print(test_results)
@@ -241,7 +247,7 @@ train_data <- data %>% filter(!Project %in% 1:7)
 
 # Create a recipe for preprocessing
 # Cubist generally doesn't require extensive preprocessing
-cubist_recipe <- recipe(logEffort ~ ., data = train_data)
+cubist_recipe <- recipe(Effort ~ ., data = train_data)
 
 # Specify the Cubist model with tuning parameters
 cubist_model <- cubist_rules(
@@ -288,7 +294,7 @@ final_fit <- final_workflow %>%
 # Evaluate on test data
 test_results <- test_data %>% 
   bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = logEffort, estimate = .pred)
+  metrics(truth = Effort, estimate = .pred)
 
 # Print test metrics
 print(test_results)
