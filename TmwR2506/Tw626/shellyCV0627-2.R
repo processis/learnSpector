@@ -411,3 +411,89 @@ autoplot(tune_results) +
 vip(final_fit) +
   ggtitle("Random Forest Variable Importance")
 
+
+##############################################SVM
+
+# Load required packages
+library(tidymodels)  # Includes parsnip, recipes, workflows, etc.
+library(kernlab)     # Engine for SVM
+library(tidyverse)   # For data manipulation and visualization
+
+# Convert numeric columns if needed (assuming this was in your original data prep)
+data$TeamExp <- as.numeric(data$TeamExp)
+data$ManagerExp <- as.numeric(data$ManagerExp)
+
+# Split data into training and test sets (using your project exclusion approach)
+train_data <- subset(data, !Project %in% c(73, 66, 56, 41, 32, 22, 13))
+test_data <- data %>% filter(Project %in% c(73, 66, 56, 41, 32, 22, 13))
+
+# Alternatively, using your second approach (commented out here)
+ test_data <- data %>% filter(Project %in% 1:7)
+ train_data <- data %>% filter(!Project %in% 1:7)
+
+# Create a recipe for preprocessing
+# SVM benefits from standardized predictors
+svm_recipe <- recipe(Effort ~ ., data = train_data) %>%
+  step_normalize(all_numeric_predictors())  # Center and scale numeric predictors
+# Note: SVM doesn't need PCA like PCR did
+
+# Specify the SVM model with tunable parameters
+svm_model <- svm_rbf(
+  cost = tune(),       # Regularization parameter
+  rbf_sigma = tune()   # Kernel parameter
+) %>% 
+  set_engine("kernlab") %>% 
+  set_mode("regression")
+
+# Set up workflow
+svm_workflow <- workflow() %>% 
+  add_recipe(svm_recipe) %>% 
+  add_model(svm_model)
+
+# Create cross-validation folds for tuning
+folds <- vfold_cv(train_data, v = 5)
+
+# Set up tuning grid for SVM parameters
+tune_grid <- grid_regular(
+  cost(),          # Tests various cost values
+  rbf_sigma(),     # Tests various sigma values
+  levels = 5       # Number of values to try for each parameter
+)
+
+# Tune the model
+tune_results <- tune_grid(
+  svm_workflow,
+  resamples = folds,
+  grid = tune_grid,
+  metrics = metric_set(rmse, rsq)
+)
+
+# Select the best model based on RMSE
+best_model <- select_best(tune_results, metric = "rmse")
+
+# Finalize the workflow with the best parameters
+final_workflow <- svm_workflow %>% 
+  finalize_workflow(best_model)
+
+# Fit the final model on the full training data
+final_fit <- final_workflow %>% 
+  fit(data = train_data)
+
+# Evaluate on test data
+test_results <- test_data %>% 
+  bind_cols(predict(final_fit, new_data = test_data)) %>% 
+  metrics(truth = Effort, estimate = .pred)
+
+# Print test metrics
+print(test_results)
+
+# Plot tuning results
+autoplot(tune_results) +
+  ggtitle("SVM Tuning Results")
+
+# If you want to examine the final model details
+final_model_details <- extract_fit_engine(final_fit)
+print(final_model_details)
+
+# Variable importance plot (not as straightforward as for linear models)
+# This requires additional steps for SVM
