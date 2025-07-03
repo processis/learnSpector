@@ -349,6 +349,7 @@ tidymodels_prefer()
 mlp_spec <- 
   mlp(hidden_units = tune(), penalty = tune(), epochs = tune()) %>% 
   set_engine("nnet", trace = 0) %>% 
+  set_mode("classification")
   
 mlp_param <- extract_parameter_set_dials(mlp_spec)
 mlp_param %>% extract_parameter_dials("hidden_units")
