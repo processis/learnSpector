@@ -239,7 +239,7 @@ marsTune <- train(x = swEngTrainXtrans, y = swEngTrainY,
                   method = "earth",
                   tuneGrid = expand.grid(degree = 1, nprune = 2:38),
                   trControl = ctrl)
-marsTune
+marsTunez
 
 
 plot(marsTune)
