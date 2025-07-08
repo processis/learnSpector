@@ -34,7 +34,7 @@ ggplot(data, aes(x = data$LogPtsAjust, y = data$LogEffort, color = data$Language
        color = "Language") +
   theme_minimal()
 
-desha <- data[,c(1:17)] 
+desha <- desharnais[,c(1:17)] 
 
 desha$TeamExp<-as.numeric(desha$TeamExp)
 desha$ManagerExp<-as.numeric(desha$ManagerExp)
