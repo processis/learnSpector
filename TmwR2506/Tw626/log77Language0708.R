@@ -1,26 +1,14 @@
-#!desharnaisLogEffort77kaggle3noMissingTrain.csv
-#!desharnais123fillMedLog71TrainSet.csv
+library(tidyverse)
+library(tidymodels)
+tidymodels_prefer()
+library(tidymodels)
+library(readr)
+library(dplyr)
+library(glmnet)      # Engine for elastic net
+library(tidyverse)   # For data manipulation and visualization
 
-
-#desharnaisLogEffort77kaggleLang3.csv
-#desharnaisLogEffort77kaggleLang3no1-7.csv
-
-#cleanDesharnaisLogEffort77.csv
-
-desharnais <- read.table("/media/user/娱乐/learnSpector/TmwR2506/tidydata/cleanDesharnaisLogEffort77.csv",
-                         sep = ",", header = TRUE)
-
-
-# 加载ggplot2包
-library(ggplot2)
-
-
-hist(desharnais$Length)
-hist(desharnais$PointsAjust)
-
-# 读取数据
-#!desharnais123fillMedLog71TrainSet-loglength.csv
-data <- read.csv("cleanDesharnaisLogEffort77.csv")
+data <- read.csv("/media/user/娱乐/learnSpector/TmwR2506/tidydata/cleanDesharnaisLogEffort77.csv") %>% 
+  filter(Language1 == 1)
 
 hist(data$Length)
 hist(data$PointsAjust)
@@ -32,6 +20,7 @@ ggplot(data, aes(x = data$LogPtsAjust, y = data$LogEffort, color = data$Language
        x = "X Variable",
        y = "Y Variable",
        color = "Group")
+
 
 #data$Language<-as.factor(data$Language)
 
@@ -45,38 +34,15 @@ ggplot(data, aes(x = data$LogPtsAjust, y = data$LogEffort, color = data$Language
        color = "Language") +
   theme_minimal()
 
-
-
-
-
-
-
-
-
-
 desha <- desharnais[,c(1:17)] 
 
 desha$TeamExp<-as.numeric(desha$TeamExp)
 desha$ManagerExp<-as.numeric(desha$ManagerExp)
-View(desha)
 
-deshaTrain <- subset(desha,Project!=73)
-deshaTrain <- subset(deshaTrain,Project!=66)
-deshaTrain <- subset(deshaTrain,Project!=56)
-deshaTrain <- subset(deshaTrain,Project!=41)
-deshaTrain <- subset(deshaTrain,Project!=32)
-deshaTrain <- subset(deshaTrain,Project!=22)
-deshaTrain <- subset(deshaTrain,Project!=13)
-#deshaTrain <- subset(deshaTrain,Project!=66)
+split <- initial_split(desha, prop = 0.75)
+deshaTrain <- training(split)
+deshaTest <- testing(split)
 
-
-#1,2,3,4,5,6,7
-library(dplyr)
-
-deshaTest <-desha%>%filter(Project%in%c(73,66,56,41,32,22,13))
-
-
-#deshaTest <- subset(desha,Project < 9)
 
 #choose TeamExp ManagerExp  LogLength  LogEffort LOgptsAjust
 deshaTrain = deshaTrain[,c(2,15,16)]
@@ -97,6 +63,7 @@ swEngTrainX = deshaTrainX
 swEngTestX = deshaTestX
 swEngTrainXtrans = deshaTrainX
 swEngTestXtrans = deshaTestX
+
 
 library(caret)
 library(corrplot)
@@ -152,7 +119,6 @@ lmTune0 <- train(x = swEngTrainXtrans, y = swEngTrainY,
                  trControl = ctrl)
 
 lmTune0  
-
 
 testResults$lmTune0 <- predict(lmTune0, swEngTestXtrans)
 
@@ -362,3 +328,6 @@ cbImp
 
 testResults$CUBIST <- predict(cubistTune, swEngTestXtrans) #add result of CUBIST
 write.table(testResults,file="/home/user/Downloads/testResultsSvmRfCubist.csv",sep=",") # output testResults.csv
+
+
+
