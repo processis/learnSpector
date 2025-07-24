@@ -7,7 +7,10 @@ library(dplyr)
 library(glmnet)      # Engine for elastic net
 library(tidyverse)   # For data manipulation and visualization
 
-data <- read.csv("/media/user/娱乐/learnSpector/TmwR2506/tidydata/cleanDesharnaisLogEffort77.csv") %>% 
+data <- read.csv("cleanDesharnaisLogEffort77.csv") %>% 
+  filter(Language1 == 1)
+
+#data <- read.csv("/media/user/娱乐/learnSpector/TmwR2506/tidydata/cleanDesharnaisLogEffort77.csv") %>% 
   filter(Language1 == 1)
 
 hist(data$Length)

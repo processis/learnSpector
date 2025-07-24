@@ -5,15 +5,16 @@ library(dplyr)
 library(glmnet)      # Engine for elastic net
 library(tidyverse)   # For data manipulation and visualization
 
-
-
-data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv")%>% 
+data <- read_csv("desharnais77CH-1.csv")%>% 
   filter(Language == 1)
 
-data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv")%>% 
+#data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv")%>% 
+  filter(Language == 1)
+
+#data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv")%>% 
   filter(Language == 2)
 
-data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv")%>% 
+#data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv")%>% 
   filter(Language == 3)
 
 data <- data %>% mutate(Effort = log10(Effort))
