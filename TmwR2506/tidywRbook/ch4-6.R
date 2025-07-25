@@ -34,7 +34,7 @@ ames <- ames %>% mutate(Sale_Price = log10(Sale_Price))
 library(tidymodels)
 tidymodels_prefer()
 
-source("/media/user/娱乐/learnSpector/TmwR2506/ames_snippets.R")
+source("ames_snippets.R")
 
 set.seed(501)
 ames_split <- initial_split(ames, prop = 0.80)
