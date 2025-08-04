@@ -7,7 +7,7 @@ library(tidyverse)   # For data manipulation and visualization
 
 
 
-data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv")%>% 
+data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/deshanis/tidydata/desharnais77CH-1.csv")%>% 
   filter(Language == 1)
 
 data <- read_csv("/media/user/娱乐/learnSpector/TmwR2506/desharnais77CH-1.csv")%>% 
@@ -290,7 +290,7 @@ library(DALEX)       # For model explanations (optional)
 
 # Create a recipe for preprocessing
 # Random forests don't typically need extensive preprocessing
-rf_recipe <- recipe(logEffort ~ ., data = train_data)
+rf_recipe <- recipe(Effort ~ ., data = train_data)
 
 # Specify the Random Forest model with tuning parameters
 rf_model <- rand_forest(
@@ -340,7 +340,7 @@ final_fit <- final_workflow %>%
 # Evaluate on test data
 test_results <- test_data %>% 
   bind_cols(predict(final_fit, new_data = test_data)) %>% 
-  metrics(truth = logEffort, estimate = .pred)
+  metrics(truth = Effort, estimate = .pred)
 
 # Print test metrics
 print(test_results)
