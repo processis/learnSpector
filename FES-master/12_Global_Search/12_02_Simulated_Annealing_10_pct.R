@@ -21,10 +21,10 @@ registerDoParallel(cl)
 
 # ------------------------------------------------------------------------------
 
-load("../Data_Sets/OkCupid/okc.RData")
-load("../Data_Sets/OkCupid/okc_other.RData")
-load("../Data_Sets/OkCupid/okc_binary.RData")
-load("../Data_Sets/OkCupid/okc_features.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/OkCupid/okc.RData")
+load("/media/user/娱乐/learnSpector/FES-masterData_Sets/OkCupid/okc_other.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/OkCupid/okc_binary.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/OkCupid/okc_features.RData")
 
 # ------------------------------------------------------------------------------
 

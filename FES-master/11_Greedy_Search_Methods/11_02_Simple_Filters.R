@@ -21,7 +21,7 @@ registerDoParallel(cl)
 
 # ------------------------------------------------------------------------------
 
-load("../Data_Sets/Parkinsons_Disease/pd_split.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/Parkinsons_Disease/pd_split.RData")
 
 # Create an initial recipe -----------------------------------------------------
 

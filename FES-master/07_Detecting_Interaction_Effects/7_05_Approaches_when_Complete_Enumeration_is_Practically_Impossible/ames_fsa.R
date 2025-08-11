@@ -20,7 +20,8 @@ library(crayon)
 library(stringr)
 
 source("fsa_functions.R")
-source("../clean_value.R")
+source("/media/user/娱乐/learnSpector/FES-master/07_Detecting_Interaction_Effects/clean_value.R")
+
 
 # ------------------------------------------------------------------------------
 

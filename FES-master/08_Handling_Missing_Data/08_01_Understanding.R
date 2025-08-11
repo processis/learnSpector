@@ -23,9 +23,9 @@ theme_set(theme_bw())
 
 data(scat)
 
-load("../Data_Sets/Chicago_trains/chicago.RData")
-load("../Data_Sets/Chicago_trains/chicago_raw_entries.RData")
-load("../Data_Sets/Chicago_trains/stations.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/Chicago_trains/chicago.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/Chicago_trains/chicago_raw_entries.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/Chicago_trains/stations.RData")
 
 # Figure 8.1 -------------------------------------------------------------------
 # https://bookdown.org/max/FESunderstanding-the-nature-and-severity-of-missing-information.html#fig:missing-vis
