@@ -6,8 +6,8 @@ registerDoParallel(cl)
 
 # ------------------------------------------------------------------------------
 
-load("../../../Data_Sets/Pharmaceutical_Manufacturing_Monitoring/derivatives.RData")
-load("../../../Data_Sets/Pharmaceutical_Manufacturing_Monitoring/resample_ind.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/Pharmaceutical_Manufacturing_Monitoring/derivatives.RData")
+load("/media/user/娱乐/learnSpector/FES-master/Data_Sets/Pharmaceutical_Manufacturing_Monitoring/resample_ind.RData")
 
 # ------------------------------------------------------------------------------
 
