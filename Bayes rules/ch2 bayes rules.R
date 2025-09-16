@@ -133,3 +133,8 @@ win_one <- chess_sim %>%
 win_one %>%
   tabyl(pi) %>%
   adorn_totals("row")
+
+
+# Plot the posterior approximation
+ggplot(win_one, aes(x = pi)) +
+  geom_bar()
