@@ -19,6 +19,9 @@ plot( 1:100 , positions[1:100] )
 
 plot( table( positions ) )
 
+library(mvtnorm)
+library(ks)
+
 D <- 10
 T <- 1e3
 Y <- rmvnorm(T,rep(0,D),diag(D))
@@ -61,7 +64,20 @@ plot( NULL , ylab="muy" , xlab="mux" , xlim=c(-pr,pr) , ylim=c(-pr,pr) )
 step <- 0.03
 L <- 11 # 0.03/28 for U-turns --- 11 for working example
 n_samples <- 4
-path_col <- col.alpha("black",0.5)
+#path_col <- col.alpha("black",0.5)
+
+
+path_col <- alpha("black",0.5)
+
+
+
+
+
+
+
+
+
+
 points( Q$q[1] , Q$q[2] , pch=4 , col="black" )
 for ( i in 1:n_samples ) {
   Q <- HMC2( U , U_gradient , step , L , Q$q )
@@ -190,6 +206,89 @@ m9.1 <- ulam(
 show( m9.1 )
 
 precis( m9.1 , 2 )
+
+pairs( m9.1 )
+
+traceplot( m9.1 )
+
+trankplot( m9.1 )
+
+y <- c(-1,1)
+set.seed(11)
+m9.2 <- ulam(
+  alist(
+    y ~ dnorm( mu , sigma ) ,
+    mu <- alpha ,
+    alpha ~ dnorm( 0 , 1000 ) ,
+    sigma ~ dexp( 0.0001 )
+  ) , data=list(y=y) , chains=3 )
+
+precis( m9.2 )
+
+set.seed(11)
+m9.3 <- ulam(
+  alist(
+    y ~ dnorm( mu , sigma ) ,
+    mu <- alpha ,
+    alpha ~ dnorm( 1 , 10 ) ,
+    sigma ~ dexp( 1 )
+  ) , data=list(y=y) , chains=3 )
+precis( m9.3 )
+
+set.seed(41)
+y <- rnorm( 100 , mean=0 , sd=1 )
+
+set.seed(384)
+m9.4 <- ulam(
+  alist(
+    y ~ dnorm( mu , sigma ) ,
+    mu <- a1 + a2 ,
+    a1 ~ dnorm( 0 , 1000 ),
+    a2 ~ dnorm( 0 , 1000 ),
+    sigma ~ dexp( 1 )
+  ) , data=list(y=y) , chains=3 )
+precis( m9.4 )
+
+m9.5 <- ulam(
+  alist(
+    y ~ dnorm( mu , sigma ) ,
+    mu <- a1 + a2 ,
+    a1 ~ dnorm( 0 , 10 ),
+    a2 ~ dnorm( 0 , 10 ),
+    sigma ~ dexp( 1 )
+  ) , data=list(y=y) , chains=3 )
+precis( m9.5 )
+
+mp <- ulam(
+  alist(
+    a ~ dnorm(0,1),
+    b ~ dcauchy(0,1)
+  ), data=list(y=1) , chains=1 )
+
+m5.8s <- ulam(
+  alist(
+    height ~ dnorm( mu , sigma ) ,
+    mu <- a + bl*leg_left + br*leg_right ,
+    a ~ dnorm( 10 , 100 ) ,
+    bl ~ dnorm( 2 , 10 ) ,
+    br ~ dnorm( 2 , 10 ) ,
+    sigma ~ dexp( 1 )
+  ) , data=d, chains=4,
+  start=list(a=10,bl=0,br=0.1,sigma=1) )
+
+m5.8s2 <- ulam(
+  alist(
+    height ~ dnorm( mu , sigma ) ,
+    mu <- a + bl*leg_left + br*leg_right ,
+    a ~ dnorm( 10 , 100 ) ,
+    bl ~ dnorm( 2 , 10 ) ,
+    br ~ dnorm( 2 , 10 ) ,
+    sigma ~ dexp( 1 )
+  ) , data=d, chains=4,
+  constraints=list(br="lower=0"),
+  start=list(a=10,bl=0,br=0.1,sigma=1) )
+
+
 
 
 
