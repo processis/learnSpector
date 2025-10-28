@@ -105,4 +105,46 @@ for ( theta in seq( 0.170 , 0.190 , 0.001) ) {
 # Display the final result:
  show( totalP )
  
+ #Exercise 12.1
+ 
+ source("BernBeta.R")
+ source("DBDA2E-utilities.R")
+ z = 7 ; N = 24
+ theta = 0.5
+ pDgTheta = theta^z * (1-theta)^(N-z)
+ print( pDgTheta )
+
+
+ 
+ a = 2000 ; b = 2000
+ openGraph(width=5,height=7)
+ BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(0.48,0.52) ,
+           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
+ 
+ 
+ a = 0.01 ; b = 0.01
+ openGraph(width=5,height=7)
+ BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(0.48,0.52) ,
+           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
+
+ print( 2.87e-09 / 5.96e-08 )
+ 
+ a = 2 ; b = 4
+ openGraph(width=5,height=7)
+ BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(0.48,0.52) ,
+           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
+ 
+ print( 2.22e-07 / 5.96e-08 )
+ 
+ print( 5.0 / 1.38 )
+ 
+ #Exercise 12.2
+ 
+ # Use omega[j] for model index 1, omega0 for model index 2:
+ aBeta[j] <- ( equals(mdlIdx,1)*omega[j]
+               + equals(mdlIdx,2)*omega0 ) * (kappa[j]-2)+1
+ bBeta[j] <- ( 1 - ( equals(mdlIdx,1)*omega[j]
+                     + equals(mdlIdx,2)*omega0 ) ) * (kappa[j]-2)+1
+ 
+ 
  
