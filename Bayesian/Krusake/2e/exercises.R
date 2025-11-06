@@ -663,4 +663,144 @@ for ( theta in seq( 0.170 , 0.190 , 0.001) ) {
                      + equals(mdlIdx,2)*omega0 ) ) * (kappa[j]-2)+1
  
  
+ #Exercise 13.2
+ 
+ source("minNforHDIpower.R")
+ 
+ #A:
+ 
+ # For reference (not asked for in exercise), confirm that 87 flips are needed
+ # for 80% prob that 95%HDI has width less than 0.2 when generating prior has
+ # kappa=10 and omega=0.80:
+ sampSize = minNforHDIpower( genPriorMode=0.80, genPriorN=10,
+                             HDImaxwid=0.20, nullVal=NULL, ROPE=NULL,
+                             desiredPower=0.8,
+                             audPriorMode=0.5, audPriorN=2,
+                             HDImass=0.95, initSampSize=80, verbose=TRUE )
+ 
+ # Now when generating prior has kappa=2000
+ sampSize = minNforHDIpower( genPriorMode=0.80, genPriorN=2000,
+                             HDImaxwid=0.20, nullVal=NULL, ROPE=NULL,
+                             desiredPower=0.8,
+                             audPriorMode=0.5, audPriorN=2,
+                             HDImass=0.95, initSampSize=60, verbose=TRUE )
+ 
+ #C:
+ 
+ # First, verify the table entry:
+ sampSize = minNforHDIpower( genPriorMode=0.80, genPriorN=2000,
+                             HDImaxwid=NULL, nullVal=0.50, ROPE=c(0.48,0.52),
+                             desiredPower=0.8,
+                             audPriorMode=0.5, audPriorN=2,
+                             HDImass=0.95, initSampSize=15, verbose=TRUE )
+ 
+ # When the generating distribution is vague:
+ sampSize = minNforHDIpower( genPriorMode=0.80, genPriorN=2,
+                             HDImaxwid=NULL, nullVal=0.50, ROPE=c(0.48,0.52),
+                             desiredPower=0.8,
+                             audPriorMode=0.5, audPriorN=2,
+                             HDImass=0.95, initSampSize=130, verbose=TRUE )
+ 
+ #D
+ 
+ omega=0.8
+ kappa=2
+ pbeta( 1-0.50 , shape1=(omega)*(kappa-2)+1 , shape2=(1-omega)*(kappa-2)+1 )
+ 
+ pbeta( 1-0.52 , shape1=(omega)*(kappa-2)+1 , shape2=(1-omega)*(kappa-2)+1 )
+ 
+ # With goal of HDI all above 0.5:
+ sampSize = minNforHDIpower( genPriorMode=0.80, genPriorN=2,
+                             HDImaxwid=NULL, nullVal=0.50, ROPE=c(0.0,0.52),
+                             desiredPower=0.8,
+                             audPriorMode=0.5, audPriorN=2,
+                             HDImass=0.95, initSampSize=130, verbose=TRUE )
+ 
+ #Exercise 13.4
+ 
+ graphics.off()
+ rm(list=ls(all=TRUE))
+ source("DBDA2E-utilities.R")
+ # Specify some properties of the flipped coin:
+ rs=21 # random number seed
+ theta=0.5 # true theta of coin
+ maxN=700 # maximum number of flips
+ nullTheta=0.5 # null hypothesis theta
+ # Specify some colors for graphs:
+ noDecCol = "darkgrey"
+ rejectCol = "steelblue"
+ acceptCol = "skyblue"
+ set.seed(rs) # set random seed
+ # Generate random sequence of flips:
+ y = sample( c(0,1) , size=maxN , replace=TRUE , prob=c(1-theta,theta) )
+ # Compute proportion of heads at each step in sequence:
+ z = cumsum(y)
+ N = 1:maxN
+ prop = z / N
+ # Compute p value at each step, assuming fixed N at that step:
+ pval = rep(NA,maxN)
+ for ( i in 1:maxN ) {
+   plow = pbinom( q=z[i] , size=N[i] , prob=nullTheta )
+   phi = 1.0-pbinom( q=z[i]-1 , size=N[i] , prob=nullTheta )
+   pval[i] = 2*min(c(plow,phi))
+ }
+ # Compute Bayes factor at each step:
+ aPrior=1
+ bPrior=1
+ bf = ( exp( lbeta(aPrior+z,bPrior+N-z) - lbeta(aPrior,bPrior) )
+        / ( nullTheta^z * (1.0-nullTheta)^(N-z) ) )
+ # Compute HDI at each step:
+ hdi = matrix(NA,nrow=2,ncol=maxN)
+ for ( i in 1:maxN ) {
+   hdi[,i] = HDIofICDF( qbeta , shape1=aPrior+z[i] , shape2=bPrior+N[i]-z[i] )
+ }
+ # HDI width:
+ hdiwd = hdi[2,] - hdi[1,]
+ # Open graphics window, with room at top for overall title:
+ openGraph(width=7,height=8)
+ layout(matrix(1:5,nrow=5))
+ par( mar=c(1.5,3.5,0.5,1) , mgp=c(2.0,0.7,0) , oma=0.1+c(0,0,2,0) ,
+      cex.lab=1.75 , cex.main=1.5 , pch=20 )
+ # Plot proportion of heads:
+ plot( N , prop , xlab="" , ylab="z/N" , ylim=c(0,1) , type="o" )
+ abline(h=theta,lty="dashed")
+ # Plot p values:
+ plot( N , pval , xlab="" , ylab="p value" , ylim=c(0,1) , type="o" )
+ points( N[pval<.05] , pval[pval<.05] , col=rejectCol )
+ abline(h=0.05,lty="dashed")
+ # Plot Bayes factor on log scale:
+ ymax = max(abs(log(bf)))
+ plot( N , log(bf) , xlab="" , ylab="log( BF )" , type="o" ,
+       ylim=c(-ymax,ymax) )
+ points( N[bf>3] , log(bf[bf>3]) , col=rejectCol )
+ points( N[bf<1/3] , log(bf[bf<1/3]) , col=acceptCol )
+ abline(h=log(3),lty="dashed")
+ abline(h=log(1/3),lty="dashed")
+ text( 0,-ymax,"accept null",adj=c(-0.0,-0.0))
+ text( 0,ymax,"reject null",adj=c(-0.0,1.0))
+ # Plot HDI as segments:
+ plot( N , hdi[1,] , xlab="" , ylab="95% HDI" , ylim=c(0,1) , type="n" )
+ segments( x0=N , y0=hdi[1,] , x1=N , y1=hdi[2,] , col=noDecCol )
+ exidx = N[ hdi[1,] > 0.55 | hdi[2,] < 0.45 ]
+ inidx = N[ hdi[1,] > 0.45 & hdi[2,] < 0.55 ]
+ segments( x0=N[exidx] , y0=hdi[1,exidx] , x1=N[exidx] , y1=hdi[2,exidx] ,
+           col=rejectCol )
+ segments( x0=N[inidx] , y0=hdi[1,inidx] , x1=N[inidx] , y1=hdi[2,inidx] ,
+           col=acceptCol )
+ abline(h=0.55,lty="dashed")
+ abline(h=0.45,lty="dashed")
+ # Plot HDI widths:
+ plot( N , hdiwd , xlab="" , ylab="HDI width" , ylim=c(0,1) , type="o" )
+ points( N[hdiwd<.08] , hdiwd[hdiwd<.08] , col="grey" )
+ abline(h=0.08,lty="dashed")
+ # Title at top of all panels:
+ mtext( text=bquote(list(theta==.(theta))) , outer=TRUE ,
+        adj=c(0.5,0.5) , cex=1.5 )
+ 
+ 
+ 
+
+ 
+ 
+ 
  
