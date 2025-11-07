@@ -13,7 +13,7 @@ print( pDgTheta )
 # use scripts from Ex12.1 to calculate BF for Exp CvsPhython
 a = 1; b = 1  #use flat prior
 openGraph(width=5,height=7)
-BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , #ROPE=c(0.48,0.52) ,
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
 print(1.61e-09/3.72529e-09)
 
@@ -118,7 +118,7 @@ print( pDgTheta )
 # use scripts from Ex12.1 to calculate BF for Exp CvsPhython
 a = 77; b = 33  #use 
 openGraph(width=5,height=7)
-BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) ,# ROPE=c(0.48,0.52) ,
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
 print(0.0711/0.03125)
 
@@ -134,7 +134,7 @@ print( pDgTheta )
 
 a = 8.5; b = 3.5  #use f0.75 prior
 openGraph(width=5,height=7)
-BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , #ROPE=c(0.48,0.52) ,
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
 print(3.725e-09/2.99e-09)
 
@@ -239,7 +239,7 @@ print( pDgTheta )
 # use scripts from Ex12.1 to calculate BF for Exp CvsPhython
 a = 84.5; b = 35.5  #use 
 openGraph(width=5,height=7)
-BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , #ROPE=c(0.48,0.52) ,
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
 print(0.0718/0.03125)
 
@@ -275,7 +275,7 @@ print( pDgTheta )
 # use scripts from Ex12.1 to calculate BF for Exp CvsPhython
 a = 0.01; b = 0.01  #use 
 openGraph(width=5,height=7)
-BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , #ROPE=c(0.48,0.52) ,
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
 
 print(3.44e-11/3.72529e-09)
