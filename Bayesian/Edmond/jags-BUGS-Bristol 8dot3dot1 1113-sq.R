@@ -60,6 +60,13 @@ dev.new(width=7, height=5)  # Adjust dimensions as needed
 
 plot(samples)
 
+# For base R - specify dimensions
+dev.off()  # Close current device
+pdf("output.pdf", width=8, height=6)  # Or adjust dimensions
+plot(samples)
+dev.off()
+
+
 #箱线图
 
 # 提取样本数据并转换为数据框
@@ -69,12 +76,16 @@ samples_df <- as.data.frame(samples_matrix)
 # 提取res2变量（残差平方）
 res2_columns <- grep("res2", colnames(samples_df), value = TRUE)
 
+res_columns <- grep("res", colnames(samples_df), value = TRUE)
+
 # 将数据转换为长格式
 samples_long <- melt(samples_df)
 
 # 分离theta和res2变量
 theta_data <- samples_long[grep("theta", samples_long$variable), ]
 res2_data <- samples_long[grep("res2", samples_long$variable), ]
+
+res_data <- samples_long[grep("res", samples_long$variable), ]
 
 # 绘制theta的箱线图
 ggplot(theta_data, aes(x = variable, y = value)) +
@@ -92,6 +103,9 @@ ggplot(res2_data, aes(x = variable, y = value)) +
        y = "Squared Residuals") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
 
 
 # 将数据转换为长格式
