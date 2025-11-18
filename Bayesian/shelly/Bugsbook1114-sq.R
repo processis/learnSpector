@@ -2639,3 +2639,569 @@ summary(samples)
 dev.new(width=7, height=5)  # Adjust dimensions as needed
 
 plot(samples)
+
+
+
+###############9.5.1
+
+data <- list(y = c(-1, -0.3, 0.1, 0.2, 0.7, 1.2, 1.7, NA))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:8) {
+z[i] <- 0
+z[i] ~ dpois(phi[i])
+phi[i] <- log(sigma) + 0.5*pow((y[i] - mu)/sigma, 2)
+}
+y[8] ~ dflat()
+sigma ~ dunif(0, 100)
+mu ~ dunif(-100, 100)
+}
+
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("alpha","beta","gamma"," mu")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+#############9.6.1
+
+
+data <- list(y = c(6,6,6,7,7,7,NA,NA,NA))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:6) {y[i] ~ dnorm(mu, 1)} # uncensored data
+for (i in 7:9) {y[i] ~ dnorm(mu, 1)I(8,)} # censored data
+mu ~ dunif(0, 100)
+}
+
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("alpha","beta","gamma"," mu")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+##########9.6.2
+
+data <- list(y = c(6,6,6,7,7,7))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:6) {
+z[i] <- 1
+z[i] ~ dbern(p[i])
+p[i] <- exp(-0.5*(y[i] - mu)*(y[i] - mu))/phi(8 - mu)
+}
+mu ~ dunif(0, 100)
+}
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("alpha","beta","gamma"," mu")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+##########9.6.3
+
+data <- list(y=c(6,6,6,7,7,7,8,8,8))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:9) {
+lower[i] <- y[i] - 0.5
+upper[i] <- y[i] + 0.5
+z[i] ~ dnorm(mu, 1)I(lower[i], upper[i])
+}
+mu ~ dunif(0, 100)
+}
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("alpha","beta","gamma"," mu")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+
+############9.7.3
+
+data <- list(N = 12, y=c(41,25,24,23,25,42,24,53,26,25,58,31),
+             n=c(143,187,323,122,164,405,239,482,195,177,581,301))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:N) {
+y[i] ~ dbin(theta[i], n[i])
+logit(theta[i]) <- alpha + beta[i]
+beta[i] <- b[i] - mean(b[])
+b[i] ~ dunif(-10,10)
+}
+alpha ~ dunif(-10,10)
+}
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("alpha","beta","b"," y")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+###########9.9.1
+
+data <- list(N = 11, r=c(25,24,23,25,42,24,53,26,25,58,31),
+             n=c(187,323,122,164,405,239,482,195,177,581,301))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:N) {
+numbers1toN[i] <- i
+p[i] ~ dbeta(0.5, 0.5)
+r[i] ~ dbin(p[i], n[i])
+hosp.rank[i] <- rank(p[], i) # rank of hospital i
+prob.lowest[i] <- equals(hosp.rank[i], 1) # =1 if hosp i is lowest
+prob.highest[i] <- equals(hosp.rank[i], N) # =1 if hosp i is highest
+}
+hosp.lowest <- inprod(numbers1toN[], prob.lowest[])
+# index of lowest hosp
+hosp.highest <- inprod(numbers1toN[], prob.highest[])
+# index of highest hosp
+}
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("alpha","beta","b"," y")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+
+#########10.1.1
+
+
+
+data <- list(y=c(25,24,23,25,42,24,53,26,25,58,31),
+             n=c(187,323,122,164,405,239,482,195,177,581,301))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:11) {
+y[i] ~ dbin(theta[i], n[i])
+logit(theta[i]) <- logit.theta[i]
+logit.theta[i] ~ dnorm(mu, inv.omega.squared)
+}
+inv.omega.squared <- 1/pow(omega, 2)
+omega ~ dunif(0, 100)
+mu ~ dunif(-100, 100)
+}
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("inv.omega.squared","omega","mu")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+################10.7.1
+
+data <- list(N = 12, y=c(41,25,24,23,25,42,24,53,26,25,58,31),
+             n=c(143,187,323,122,164,405,239,482,195,177,581,301))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 2:N) {
+y[i] ~ dbin(theta[i], n[i])
+logit(theta[i]) <- logit.theta[i]
+logit.theta[i] ~ dnorm(mu, inv.omega.squared)
+}
+inv.omega.squared <- 1/pow(omega, 2)
+omega ~ dunif(0, 10)
+mu ~ dunif(-10, 10)
+# Mixed predictions of centre 1:
+logit.theta1.cv ~ dnorm(mu, inv.omega.squared)
+# generate replicate log-odds:
+logit(theta1.cv) <- logit.theta1.cv
+# generate replicate deaths:
+y1.cv ~ dbin(theta1.cv, n[1])
+# use mid p-value:
+P.mixed <- step(y1.cv - y[1] - 0.00001)
++ 0.5*equals(y1.cv, y[1])
+}
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("y1.cv","omega","P.mixed")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+##############10.7.2
+
+
+data <- list(N = 12, y=c(41,25,24,23,25,42,24,53,26,25,58,31),
+             n=c(143,187,323,122,164,405,239,482,195,177,581,301))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:N) {
+y[i] ~ dbin(theta[i], n[i])
+logit(theta[i]) <- logit.theta[i]
+logit.theta[i] ~ dnorm(mu, inv.omega.squared)
+}
+inv.omega.squared <- 1/pow(omega, 2)
+omega ~ dunif(0, 10)
+mu ~ dunif(-10, 10)
+# Mixed predictions of centre 1:
+logit.theta1.cv ~ dnorm(mu, inv.omega.squared)
+# generate replicate log-odds:
+logit(theta1.cv) <- logit.theta1.cv
+# generate replicate deaths:
+y1.cv ~ dbin(theta1.cv, n[1])
+# use mid p-value:
+P.mixed <- step(y1.cv - y[1] - 0.00001)
++ 0.5*equals(y1.cv, y[1])
+}
+
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("y1.cv","omega","P.mixed")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
