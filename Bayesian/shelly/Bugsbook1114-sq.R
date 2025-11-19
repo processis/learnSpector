@@ -3205,3 +3205,156 @@ summary(samples)
 dev.new(width=7, height=5)  # Adjust dimensions as needed
 
 plot(samples)
+
+
+
+##########10.3.4
+
+data <- list(y = structure(.Data = c(15,21,29,16,18,21,16,26,33,27,41,60,33,38,41,20,27,42),
+                           .Dim = c(6, 3)),
+             x = c(0, 10, 33, 100, 333, 1000))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:npupil) {
+Goals[i] ~ dcat(p[School[i],])
+}
+for (j in 1:nschool) {
+for (k in 1:3) {
+p[j,k] <- q[j,k]/sum(q[j,])
+q[j,k] ~ dgamma(a[k], 1)
+}
+}
+for (k in 1:3) {
+a[k] ~ dgamma(1, 0.001)
+p.pop[k] <- a[k]/sum(a[]) # population mean of p[,k]
+}
+dummy <- Gender[1] # stop WinBUGS complaining about unused variable
+}
+
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("y1.cv","omega","P.mixed")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+
+##########################33
+
+
+data <- list(y = structure(.Data = c(15,21,29,16,18,21,16,26,33,27,41,60,33,38,41,20,27,42),
+                           .Dim = c(6, 3)),
+             x = c(0, 10, 33, 100, 333, 1000))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:npupil) {
+Goals[i] ~ dcat(p[i,])
+for (k in 1:3) {
+p[i,k] <- q[i,k]/sum(q[i,])
+log(q[i,k]) <- a[i,k]
+}
+a[i,1] <- b[1] + b.boy*Gender[i]
+a[i,2] <- b[2]
+a[i,3] <- 0
+}
+b[1] ~ dnorm(0, 0.0001)
+b[2] ~ dnorm(0, 0.0001)
+b.boy ~ dnorm(0, 0.0001)
+or.boy <- exp(b.boy)
+
+qboy[1] <- exp(b[1] + b.boy); qboy[2] <- exp(b[2]); qboy[3] <- 1
+qgirl[1] <- exp(b[1]); qgirl[2] <- exp(b[2]); qgirl[3] <- 1
+
+# Probabilities of preferring 1) sports 2) popularity 3) grades for boys and girls separately
+for (k in 1:3) {
+   p.boy[k] <- qboy[k]/sum(qboy[])
+   p.girl[k] <- qgirl[k]/sum(qgirl[])
+}
+dummy <- School[1] + nschool
+} 
+
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("y1.cv","omega","P.mixed")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
