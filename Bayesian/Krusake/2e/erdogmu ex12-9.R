@@ -19,6 +19,7 @@ BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
 print(1.61e-09/3.72529e-09)
 
+
 #Repeat1
 # calculate B.F.
 z = 19 ; N = 25
@@ -281,3 +282,73 @@ BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
           plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
 
 print(3.44e-11/3.72529e-09)
+
+
+
+##############################
+##A=B=1
+
+z = 18 ; N = 20
+theta = 0.5
+pDgTheta = theta^z * (1-theta)^(N-z)
+print( pDgTheta )
+
+
+# use scripts from Ex12.1 to calculate BF for Exp CvsPhython
+a = 1; b = 1  #use 
+openGraph(width=5,height=7)
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
+          plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
+
+print(0.000251/9.536743e-07)
+
+
+##A=B=0.5
+
+z = 0 ; N = 20
+theta = 0.5
+pDgTheta = theta^z * (1-theta)^(N-z)
+print( pDgTheta )
+
+
+# use scripts from Ex12.1 to calculate BF for Exp CvsPhython
+a = 0.5; b = 0.5  #use 
+openGraph(width=5,height=7)
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
+          plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
+
+print(0.125/9.536743e-07)
+
+
+
+##A=B=50
+
+z = 18 ; N = 20
+theta = 0.5
+pDgTheta = theta^z * (1-theta)^(N-z)
+print( pDgTheta )
+
+
+# use scripts from Ex12.1 to calculate BF for Exp CvsPhython
+a = 50; b = 50  #use 
+openGraph(width=5,height=7)
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
+          plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
+
+print(2.56e-06/9.536743e-07)
+
+##A=50B=1
+
+z = 0; N = 20
+theta = 0.5
+pDgTheta = theta^z * (1-theta)^(N-z)
+print( pDgTheta )
+
+
+# use scripts from Ex12.1 to calculate BF for Exp CvsPhython
+a = 50; b = 1  #use 
+openGraph(width=5,height=7)
+BernBeta( c(a,b) , c(rep(0,N-z),rep(1,z)) , ROPE=c(-Inf,0.50) ,
+          plotType="Bars" , showCentTend="Mode" , showHDI=TRUE , showpD=TRUE )
+
+print(6.18e-18/9.536743e-07)

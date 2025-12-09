@@ -4,8 +4,6 @@
 source("BernBeta.R")
 source("DBDA2E-utilities.R")
 
-#log零假设概率
-
 z = 17 ; N = 28
 theta = 0.5
 pDgTheta = theta^z * (1-theta)^(N-z)
