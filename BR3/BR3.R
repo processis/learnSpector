@@ -250,6 +250,76 @@ dev.new(width=7, height=5)  # Adjust dimensions as needed
 
 plot(samples)
 
+
+#########10.5.1
+
+
+
+data <- list(y=c(25,24,23,25,42,24,53,26,25,58,31),
+             n=c(187,323,122,164,405,239,482,195,177,581,301))
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:11) {
+y[i] ~ dbin(theta[i], n[i])
+logit(theta[i]) <- mu + eta[i]*xi
+eta[i] ~ dnorm(0, inv.omega.eta.squared)
+}
+inv.omega.eta.squared <- 1/pow(omega.eta, 2)
+omega.eta <- omega/abs(xi)
+xi ~ dnorm(0, 1)
+omega ~ dunif(0, 100)
+mu ~ dunif(-100, 100)
+}
+
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("xi","omega","mu")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+
+
+
 ################10.7.1
 
 data <- list(N = 12, y=c(41,25,24,23,25,42,24,53,26,25,58,31),
