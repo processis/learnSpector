@@ -465,6 +465,218 @@ plot(samples)
 
 
 
+##################################6.5.2-deepseek
+library(R2jags)
+library(coda)
+library(ggplot2)
+library(dplyr)
+
+# 数据（与您的代码相同）
+data_jags <- list(
+  y = structure(
+    .Data = c(15, 21, 29, 16, 18, 21, 16, 26, 33, 27, 41, 60, 33, 38, 41, 20, 27, 42),
+    .Dim = c(6, 3)
+  ),
+  x = c(0, 10, 33, 100, 333, 1000)
+)
+
+# 将数据转换为适合绘图的长格式，并计算每个剂量的均值和标准差
+n_reps <- 3
+dose_rep <- rep(data_jags$x, each = n_reps)
+colonies <- as.vector(data_jags$y)
+obs_data <- data.frame(dose = dose_rep, colonies = colonies)
+
+# 计算每个剂量的统计量
+summary_data <- obs_data %>%
+  group_by(dose) %>%
+  summarise(
+    mean_colonies = mean(colonies),
+    sd_colonies = sd(colonies),
+    n = n(),
+    se_colonies = sd_colonies / sqrt(n)
+  )
+
+# 初始值
+inits_list <- list(
+  list(alpha = 0, beta = 0, gamma = 0),
+  list(alpha = 1, beta = 1, gamma = -0.001)
+)
+
+# JAGS模型代码（与您的相同）
+model_string <- "
+model {
+  for (i in 1:6) {
+    for (j in 1:3) {
+      y[i,j] ~ dpois(mu[i])
+    }
+    log(mu[i]) <- alpha + beta * log(x[i] + 10) + gamma * x[i]
+  }
+  
+  # 后验预测
+  for (i in 1:6) {
+    y.pred[i] ~ dpois(mu[i])
+  }
+  
+  # 先验分布
+  alpha ~ dnorm(0, 0.0001)
+  beta ~ dnorm(0, 0.0001)
+  gamma ~ dnorm(0, 0.0001)
+}
+"
+
+# 运行JAGS模型
+set.seed(123)
+model <- jags.model(
+  textConnection(model_string),
+  data = data_jags,
+  inits = inits_list,
+  n.chains = 2,
+  quiet = TRUE
+)
+
+# Burn-in
+update(model, 10000, progress.bar = "none")
+
+# 抽样
+params <- c("alpha", "beta", "gamma", "mu", "y.pred")
+samples <- coda.samples(
+  model,
+  variable.names = params,
+  n.iter = 20000,
+  progress.bar = "none",
+  thin = 1
+)
+
+# 合并链并提取参数后验样本
+samples_combined <- as.matrix(samples)
+
+# 提取参数
+alpha_post <- samples_combined[, "alpha"]
+beta_post <- samples_combined[, "beta"]
+gamma_post <- samples_combined[, "gamma"]
+
+# 创建新剂量的网格用于绘制平滑曲线
+plot_doses <- seq(min(data_jags$x), max(data_jags$x), length.out = 200)
+
+# 计算后验预测分布（对于新剂量）
+n_samples <- length(alpha_post)
+mu_grid <- matrix(NA, nrow = n_samples, ncol = length(plot_doses))
+
+for (i in 1:n_samples) {
+  mu_grid[i, ] <- exp(
+    alpha_post[i] + 
+      beta_post[i] * log(plot_doses + 10) + 
+      gamma_post[i] * plot_doses
+  )
+}
+
+# 计算后验汇总统计量
+mu_grid_summary <- data.frame(
+  dose = plot_doses,
+  mu_mean = apply(mu_grid, 2, mean),
+  mu_lower = apply(mu_grid, 2, quantile, probs = 0.025),
+  mu_upper = apply(mu_grid, 2, quantile, probs = 0.975)
+)
+
+# 获取原始剂量点处的模型拟合值
+mu_samples <- samples_combined[, grep("mu\\[", colnames(samples_combined))]
+mu_points <- data.frame(
+  dose = data_jags$x,
+  model_mean = apply(mu_samples, 2, mean),
+  model_lower = apply(mu_samples, 2, quantile, probs = 0.025),
+  model_upper = apply(mu_samples, 2, quantile, probs = 0.975)
+)
+
+# 绘制图形：折线连接形式
+ggplot() +
+  # 观测数据点（带误差条）
+  geom_point(
+    data = summary_data,
+    aes(x = dose, y = mean_colonies),
+    size = 3,
+    color = "black"
+  ) +
+  # 观测数据均值间的折线连接
+  geom_line(
+    data = summary_data,
+    aes(x = dose, y = mean_colonies),
+    color = "black",
+    linetype = "dashed",
+    linewidth = 0.8,
+    alpha = 0.7
+  ) +
+  # 观测数据的误差条（标准差）
+  geom_errorbar(
+    data = summary_data,
+    aes(x = dose, ymin = mean_colonies - sd_colonies, ymax = mean_colonies + sd_colonies),
+    width = 15,
+    color = "black",
+    linewidth = 0.6
+  ) +
+  # 模型拟合的平滑曲线
+  geom_line(
+    data = mu_grid_summary,
+    aes(x = dose, y = mu_mean),
+    color = "red",
+    linewidth = 1.5
+  ) +
+  # 模型拟合的95%可信区间（阴影区域）
+  geom_ribbon(
+    data = mu_grid_summary,
+    aes(x = dose, ymin = mu_lower, ymax = mu_upper),
+    alpha = 0.2,
+    fill = "red"
+  ) +
+  # 在原始剂量点处添加模型拟合点
+  geom_point(
+    data = mu_points,
+    aes(x = dose, y = model_mean),
+    color = "blue",
+    size = 3,
+    shape = 17
+  ) +
+  # 模型拟合点间的折线连接（蓝色虚线）
+  geom_line(
+    data = mu_points,
+    aes(x = dose, y = model_mean),
+    color = "blue",
+    linetype = "dotted",
+    linewidth = 0.8,
+    alpha = 0.7
+  ) +
+  # 坐标轴和标签
+  labs(
+    title = "菌落数量 vs 剂量",
+    x = "剂量",
+    y = "菌落数量",
+    caption = "黑色点和虚线：观测数据均值及连接线 | 红色实线：模型拟合曲线 | 蓝色三角和虚线：剂量点处的模型拟合值及连接线"
+  ) +
+  # 主题设置
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.major = element_line(color = "gray90", linewidth = 0.3),
+    panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5),
+    plot.caption = element_text(size = 10, color = "gray40", hjust = 0),
+    legend.position = "none"
+  ) +
+  # 坐标轴设置
+  scale_x_continuous(
+    breaks = data_jags$x,
+    expand = expansion(mult = c(0.02, 0.05))
+  ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.05)),
+    limits = c(0, max(summary_data$mean_colonies + summary_data$sd_colonies, 
+                      mu_grid_summary$mu_upper) * 1.1)
+  )
+
+# 可选：保存图形
+# ggsave("colonies_vs_dose_lines.png", width = 10, height = 6, dpi = 300)
+
+
+
 ########################################
 
 

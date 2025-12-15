@@ -2,6 +2,10 @@
 
 library(geoR)
 
+data(gambia)
+
+write.csv(gambia,"gambia.csv")
+
 Y <- gambia[,3]
 X <- gambia[,4:8]
 
