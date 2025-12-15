@@ -2768,6 +2768,234 @@ dev.new(width=7, height=5)  # Adjust dimensions as needed
 plot(samples)
 
 
+############10.4.1
+
+data <- list(
+  D = 30,
+  y = c(
+    1.09,   0.75,   0.53,   0.34,   0.23,   0.02,
+    2.03,   1.28,   1.2,   1.02,   0.83,   0.28,
+    1.44,   1.3,   0.95,   0.68,   0.52,   0.06,
+    1.55,   0.96,   0.8,   0.62,   0.46,   0.08,
+    1.35,   0.78,   0.5,   0.33,   0.18,   0.02,
+    1.08,   0.59,   0.37,   0.23,   0.17,   0.0,
+    1.32,   0.74,   0.46,   0.28,   0.27,   0.03,
+    0.02,   0.0,   1.63,   1.01,   0.73,   0.55,
+    0.41,   0.01,   0.06,   0.02,   1.26,   0.73,
+    0.4,   0.3,   0.21,   0.0,   1.3,   0.7,
+    0.4,   0.25,   0.14,   0.0),
+  offset = c(1,   7,   13,   19,   25,   31,   37,   45,   53,   59,   65),
+  time = c(
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    28.0,   32.0,   2.0,   4.0,   6.0,   8.0,
+    10.0,   24.0,   28.0,   32.0,   2.0,   4.0,
+    6.0,   8.0,   10.0,   24.0,   2.0,   4.0,
+    6.0,   8.0,   10.0,   24.0),
+  m = c(1.064710737,   2.708050201),
+  T = structure(
+    .Data = c(
+      1.0E-4,   0.0,
+      0.0,   1.0E-4),
+    .Dim = c(2, 2)),
+  R = structure(
+    .Data = c(
+      0.08,   0.0,
+      0.0,   0.08),
+    .Dim = c(2, 2)),
+  k = 2.0)
+
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:10) {
+for (j in offset[i]:(offset[i+1]-1)) {
+y[j] ~ dnorm(psi[j], inv.sigma.squared[i])
+psi[j] <- D*exp(-CL[i]*time[j]/V[i])/V[i]
+}
+CL[i] <- exp(theta[i, 1])
+V[i] <- exp(theta[i, 2])
+theta[i, 1:2] ~ dmnorm(mu.theta[], inv.Omega[,])
+sigma[i] <- abs(z[i])/sqrt(gamma[i])
+z[i] ~ dnorm(0, inv.B.squared)
+gamma[i] ~ dgamma(0.5, 0.5)
+inv.sigma.squared[i] <- 1/pow(sigma[i], 2)
+}
+inv.B.squared <- 1/pow(B, 2)
+B ~ dunif(0, 100)
+mu.theta[1:2] ~ dmnorm(m[], T[,])
+inv.Omega[1:2, 1:2] ~ dwish(R[,], k)
+Omega[1:2, 1:2] <- inverse(inv.Omega[,])
+}
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("mu.theta","Omega","B")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+
+data <- list(
+  D = 30,
+  y = c(
+    1.09,   0.75,   0.53,   0.34,   0.23,   0.02,
+    2.03,   1.28,   1.2,   1.02,   0.83,   0.28,
+    1.44,   1.3,   0.95,   0.68,   0.52,   0.06,
+    1.55,   0.96,   0.8,   0.62,   0.46,   0.08,
+    1.35,   0.78,   0.5,   0.33,   0.18,   0.02,
+    1.08,   0.59,   0.37,   0.23,   0.17,   0.0,
+    1.32,   0.74,   0.46,   0.28,   0.27,   0.03,
+    0.02,   0.0,   1.63,   1.01,   0.73,   0.55,
+    0.41,   0.01,   0.06,   0.02,   1.26,   0.73,
+    0.4,   0.3,   0.21,   0.0,   1.3,   0.7,
+    0.4,   0.25,   0.14,   0.0),
+  offset = c(1,   7,   13,   19,   25,   31,   37,   45,   53,   59,   65),
+  time = c(
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    2.0,   4.0,   6.0,   8.0,   10.0,   24.0,
+    28.0,   32.0,   2.0,   4.0,   6.0,   8.0,
+    10.0,   24.0,   28.0,   32.0,   2.0,   4.0,
+    6.0,   8.0,   10.0,   24.0,   2.0,   4.0,
+    6.0,   8.0,   10.0,   24.0),
+  m = c(1.064710737,   2.708050201),
+  T = structure(
+    .Data = c(
+      1.0E-4,   0.0,
+      0.0,   1.0E-4),
+    .Dim = c(2, 2)),
+  R = structure(
+    .Data = c(
+      0.08,   0.0,
+      0.0,   0.08),
+    .Dim = c(2, 2)),
+  k = 2.0)
+
+# Initialize Y.rep with reasonable values
+init <- list(
+  list(alpha = 0, beta = 0, gamma = 0, logr.cont = 1)
+  #list(Y.rep = data$Y + rnorm(66, 0, 5)),
+  # list(Y.rep = data$Y + rnorm(66, 0, 5))
+)
+
+
+
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:10) {
+for (j in offset[i]:(offset[i+1]-1)) {
+y[j] ~ dnorm(psi[j], inv.sigma.squared[i])
+psi[j] <- D*exp(-CL[i]*time[j]/V[i])/V[i]
+}
+CL[i] <- exp(theta[i, 1])
+V[i] <- exp(theta[i, 2])
+theta[i, 1:2] ~ dmnorm(mu.theta[], inv.Omega[,])
+log.sigma[i] ~ dnorm(mu.sigma, inv.omega.sigma.squared)
+log(sigma[i]) <- log.sigma[i]
+inv.sigma.squared[i] <- 1/pow(sigma[i], 2)
+}
+mu.sigma ~ dnorm(0, 0.0001)
+med.sigma <- exp(mu.sigma)
+omega.sigma ~ dunif(0, 100)
+inv.omega.sigma.squared <- 1 / pow(omega.sigma, 2)
+mu.theta[1:2] ~ dmnorm(m[], T[,])
+inv.Omega[1:2, 1:2] ~ dwish(R[,], k)
+Omega[1:2, 1:2] <- inverse(inv.Omega[,])
+}
+
+
+")
+
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+#model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+model <- jags.model(model_string, 
+                    data = data, 
+                    #inits = init,
+                    n.chains = 2,
+                    quiet = TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("mu.theta","Omega","B")  #, "deviance"
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ############10.8.1
 
 data <- list(y = structure(.Data = c(15,21,29,16,18,21,16,26,33,27,41,60,33,38,41,20,27,42),
