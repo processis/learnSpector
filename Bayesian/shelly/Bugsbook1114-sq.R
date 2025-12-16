@@ -224,6 +224,64 @@ dev.new(width=7, height=5)  # Adjust dimensions as needed
 plot(samples)
 
 
+#############6.1.1        
+
+data <-  list(y = c(177,236,285,350,376), x = c(8,15,22,29,36))
+
+
+# 初始值
+inits_list <- list(
+  list(alpha = 40, beta = 1),
+  list(alpha = mean(data_list$y), beta = 1/sd(data_list$y)^2)
+)
+
+
+# JAGS模型代码
+model_string <- textConnection("model {
+for (i in 1:5) {
+y[i] ~ dnorm(mu[i], tau)
+mu[i] <- alpha + beta*(x[i] - mean(x[]))
+}
+alpha ~ dflat()
+beta ~ dflat()
+tau <- 1/sigma2
+log(sigma2) <- 2*log.sigma
+log.sigma ~ dflat()
+}
+")
+
+
+
+#load data and compile MCMC code , no inits
+#inits <- list(beta1=rnorm(1),beta2=rnorm(1),tau=10)
+model <- jags.model(model_string,data = data,  n.chains=2,quiet=TRUE)
+
+#burn in 10000 samples
+update(model, 10000, progress.bar="none")
+
+#gen 20000 post burn in samples  and retain param in params
+params  <- c("alpha","beta","tau")
+samples <- coda.samples(model, 
+                        variable.names=params, 
+                        n.iter=20000, progress.bar="none",thin=1)
+
+#sum
+summary(samples)
+
+# Open a new device with controlled size
+dev.new(width=7, height=5)  # Adjust dimensions as needed
+
+plot(samples)
+
+
+
+
+
+
+
+
+
+
 ################6.3.1
 
 data <-  list(x = structure(
