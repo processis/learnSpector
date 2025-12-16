@@ -24,7 +24,7 @@ data <-  list(y=person_error, n=person_total,N=n)
 #define model as  a string
 model_string <- textConnection("model{
 
-#likelihood  #use N instead of 12 in book, more generic
+#likelihood  #use N instead of 12
 for (i in 1:N) {
   y[i] ~ dbin(theta, n[i])
   res[i] <- (y[i] - n[i]*theta)/sqrt(n[i]*theta*(1-theta))
@@ -55,6 +55,11 @@ summary(samples)
 dev.new(width=20, height=20)  # Adjust dimensions as needed
 
 plot(samples)
+
+
+pdf("myplot.pdf", width = 10, height = 8)
+plot(samples)
+dev.off()
 
 
 #箱线图
