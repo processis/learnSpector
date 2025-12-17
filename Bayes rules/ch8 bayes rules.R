@@ -1,3 +1,5 @@
+#报错（8 9错误类型类似 stan）
+
 # Load packages
 library(bayesrules)
 library(tidyverse)

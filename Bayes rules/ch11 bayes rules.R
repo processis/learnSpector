@@ -1,3 +1,7 @@
+
+#报错，但好像不影响后面
+
+
 # Load some packages
 library(bayesrules)
 library(rstanarm)

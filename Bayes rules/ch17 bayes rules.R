@@ -1,3 +1,6 @@
+#有一个^小报错  不影响后面
+
+
 # Load packages
 library(bayesrules)
 library(tidyverse)
@@ -126,9 +129,9 @@ tidy_sigma
 
 sigma_0 <- tidy_sigma[1,3]
 sigma_y <- tidy_sigma[2,3]
-sigma_0^2 / (sigma_0ˆ2 + sigma_yˆ2)
+sigma_0^2 / (sigma_0^2 + sigma_y^2)
 
-sigma_yˆ2 / (sigma_0ˆ2 + sigma_yˆ2)
+sigma_y^2 / (sigma_0^2 + sigma_y^2)
 
 #17.3
 

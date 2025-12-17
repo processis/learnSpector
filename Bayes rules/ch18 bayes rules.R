@@ -1,3 +1,5 @@
+#rstudio就崩掉
+
 # Load packages
 library(bayesrules)
 library(tidyverse)

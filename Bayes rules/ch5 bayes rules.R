@@ -1,3 +1,5 @@
+#可以正常跑通
+
 plot_beta(alpha = 1, beta = 2)
 
 # Plot the Gamma(10, 2) prior

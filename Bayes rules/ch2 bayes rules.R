@@ -1,3 +1,4 @@
+#可以正常跑通
 
 install.packages(c("bayesrules", "tidyverse", "janitor", "rstanarm",
                    "bayesplot", "tidybayes", "broom.mixed", "modelr",

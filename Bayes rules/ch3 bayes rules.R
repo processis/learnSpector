@@ -1,3 +1,5 @@
+#可以正常跑通
+
 # Plot the Beta(45, 55) prior
 #ch3.1
 plot_beta(45, 55)

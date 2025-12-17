@@ -1,3 +1,6 @@
+#可以正常跑通
+
+
 # Load packages
 library(bayesrules)
 library(tidyverse)
@@ -133,9 +136,9 @@ tidy(spotify_hierarchical, effects = "fixed",
 
 tidy(spotify_hierarchical, effects = "ran_pars")
 
-15.1ˆ2 / (15.1ˆ2 + 14.0ˆ2)
+15.1^2 / (15.1^2 + 14.0^2)
 
-14.0ˆ2 / (15.1ˆ2 + 14.0ˆ2)
+14.0^2 / (15.1^2 + 14.0^2)
 
 artist_summary <- tidy(spotify_hierarchical, effects = "ran_vals",
                        conf.int = TRUE, conf.level = 0.80)

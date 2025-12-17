@@ -1,3 +1,6 @@
+#可以正常跑通
+
+
 library(ggplot2)
 
 

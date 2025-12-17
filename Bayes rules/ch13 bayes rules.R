@@ -1,3 +1,6 @@
+#报错
+
+
 # Load packages
 library(bayesrules)
 library(rstanarm)
