@@ -12,6 +12,8 @@ library(forcats)
 # Load data
 data(spotify)
 
+write.csv(spotify, "spotify.csv")
+
 spotify <- spotify %>%
   select(artist, title, popularity) %>%
   mutate(artist = fct_reorder(artist, popularity, .fun = 'mean'))

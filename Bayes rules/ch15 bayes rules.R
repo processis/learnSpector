@@ -8,6 +8,9 @@ library(rstanarm)
 library(broom.mixed)
 # Load data
 data(cherry_blossom_sample)
+
+write.csv(cherry_blossom_sample, "cherry_blossom_sample.csv")
+
 running <- cherry_blossom_sample %>%
   select(runner, age, net)
 nrow(running)

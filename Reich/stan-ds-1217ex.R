@@ -2,6 +2,7 @@
 library(rstan)
 library(ggplot2)
 library(bayesplot)
+library(BH)
 
 # Set Stan options for better performance
 rstan_options(auto_write = TRUE)
