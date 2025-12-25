@@ -17,3 +17,4 @@ teamexp+pointadjust+managerexp 随机LM RF NNET RR 和 PCR RF RMSE 差异都比�
   Reich文件夹里面CH3-CH5 附录A5
   bayes rules ch2-ch19  都有代码
   besian 里面shelly文件夹   是类似8.2.1那种代码，krusake是第二版代码，里面有jas和stan
+  ES: test 测试
