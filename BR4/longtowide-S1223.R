@@ -28,6 +28,7 @@ wide_df <- df_long %>%
 library(tidyr)
 library(dplyr)
 library(readr)
+library(stringr)
 # 假设数据已读入为data.frame，名为df
 # 如果从文件读取，可以使用：
 # df <- read.csv("your_data.csv", header = TRUE)
@@ -73,22 +74,34 @@ for(year in all_years) {
     wide_df[[year]] <- NA
   }
 }
+
+
+
 # 按正确顺序排列列
 wide_df <- wide_df %>%
   select(row_id, all_of(all_years))
 # 6. 重命名第一列
 colnames(wide_df)[1] <- "name age(year)"
-# 7. 导出为CSV文件
-write_csv(wide_df, "formatted_data.csv", na = "")
-# 8. 如果需要更接近图2的格式（空格分隔，无引号），可以使用：
-write.table(wide_df, "formatted_data.txt", 
-            sep = " ", 
-            row.names = FALSE, 
-            col.names = TRUE,
-            quote = FALSE,
-            na = "")
-# 显示结果
-print(wide_df)
+
+
+
+# 另一种方案：创建两列，并用分隔符连接
+wide_df_alternative <- wide_df %>%
+  # 使用正则表达式提取各部分
+  mutate(
+    name = str_extract(`name age(year)`, "^\\d"),
+    age = str_extract(`name age(year)`, "(?<=^\\d)\\d+(?=\\()"),
+    year = str_extract(`name age(year)`, "(?<=\\()\\d+(?=\\))")
+  ) %>%
+  # 重新排列列
+  select(name, age, year, all_of(all_years))
+# 导出
+write_csv(wide_df_alternative, "formatted_data_alternative.csv", na = "")
+
+print(wide_df_alternative)
+
+
+
 
 
 
