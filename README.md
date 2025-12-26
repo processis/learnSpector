@@ -18,3 +18,9 @@ teamexp+pointadjust+managerexp 随机LM RF NNET RR 和 PCR RF RMSE 差异都比�
   bayes rules ch2-ch19  都有代码
   besian 里面shelly文件夹   是类似8.2.1那种代码，krusake是第二版代码，里面有jas和stan
   ES: test 测试
+
+2025.12.26
+
+宋老师256备份了128的数据在20251226-128stan文件夹
+
+app.book书录入（很多图片改变了，暂未决定）
