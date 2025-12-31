@@ -24,3 +24,7 @@ teamexp+pointadjust+managerexp 随机LM RF NNET RR 和 PCR RF RMSE 差异都比�
 宋老师256备份了128的数据在20251226-128stan文件夹
 
 app.book书录入（很多图片改变了，暂未决定）
+
+2025.12.31
+
+youtube two videos code
