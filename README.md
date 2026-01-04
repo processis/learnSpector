@@ -28,3 +28,12 @@ app.book书录入（很多图片改变了，暂未决定）
 2025.12.31
 
 youtube two videos code
+
+2026.1.4
+
+Estimate A Basic Bayesian Regression with rstanarm package in #R:https://youtu.be/s-lOFBhRq1U?si=xXTYe9QUhTmPYl9H     right
+
+Lab 13 Intro to rstanarm and Priors:https://youtu.be/3q-WNFfWK7Y?si=sJvw4yD-M5Te384g     no csv
+
+
+
