@@ -1,0 +1,7 @@
+根据erdogmuex11-7.R来计算RE1-7的BF0 和HDI
+
+所有数据储存在BF excel表中
+
+之前的范围是0.48-0.5后改称负无穷到0.5（也就是只留0.5一条线）
+
+#pDgTheta是算log零假设概率，其数值除以图中的PD即为BF0和BF0.75（上面re1-7是Prior 0.5  下面re1-7是Prior 0.75
