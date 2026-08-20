@@ -9,7 +9,7 @@ library(tidybayes)
 library(tidyr)
 library(readsdr)
 
-FILE <- "R/05 Adopters Example/Adopters.stmx"
+FILE <- "Adopters.stmx"
 mdl        <- read_xmile(FILE)
 
 # Check the stocks
@@ -39,7 +39,7 @@ stan_d <- list(n_obs      = nrow(syn),
 
 
 
-mod           <- cmdstan_model("R/05 Adopters Example/stan/Adopters_F.stan")
+mod           <- cmdstan_model("stan/Adopters_F.stan")
 
 fit <- mod$sample(data              = stan_d,
                   chains            = 4,
